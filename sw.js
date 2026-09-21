@@ -1,9 +1,30 @@
 // Service worker: guarda la app completa para que funcione sin conexión.
 // Cambia VERSION en cada publicación para que los teléfonos descarguen la nueva.
-const VERSION = 'calcu-v0.1.0';
+const VERSION = 'calcu-v0.2.0';
 const ASSETS = [
   './', 'index.html', 'manifest.webmanifest',
-  'lib/math.js', 'lib/nerdamer.all.min.js', 'lib/tex-svg-full.js',
+  'lib/math.js', 'lib/nerdamer.all.min.js', 'lib/algebrite.bundle-for-browser.js',
+  'lib/mathlive/mathlive.min.js', 'lib/mathlive/mathlive-fonts.css', 'lib/mathlive/mathlive-static.css',
+  'lib/mathlive/fonts/KaTeX_AMS-Regular.woff2',
+  'lib/mathlive/fonts/KaTeX_Caligraphic-Bold.woff2',
+  'lib/mathlive/fonts/KaTeX_Caligraphic-Regular.woff2',
+  'lib/mathlive/fonts/KaTeX_Fraktur-Bold.woff2',
+  'lib/mathlive/fonts/KaTeX_Fraktur-Regular.woff2',
+  'lib/mathlive/fonts/KaTeX_Main-Bold.woff2',
+  'lib/mathlive/fonts/KaTeX_Main-BoldItalic.woff2',
+  'lib/mathlive/fonts/KaTeX_Main-Italic.woff2',
+  'lib/mathlive/fonts/KaTeX_Main-Regular.woff2',
+  'lib/mathlive/fonts/KaTeX_Math-BoldItalic.woff2',
+  'lib/mathlive/fonts/KaTeX_Math-Italic.woff2',
+  'lib/mathlive/fonts/KaTeX_SansSerif-Bold.woff2',
+  'lib/mathlive/fonts/KaTeX_SansSerif-Italic.woff2',
+  'lib/mathlive/fonts/KaTeX_SansSerif-Regular.woff2',
+  'lib/mathlive/fonts/KaTeX_Script-Regular.woff2',
+  'lib/mathlive/fonts/KaTeX_Size1-Regular.woff2',
+  'lib/mathlive/fonts/KaTeX_Size2-Regular.woff2',
+  'lib/mathlive/fonts/KaTeX_Size3-Regular.woff2',
+  'lib/mathlive/fonts/KaTeX_Size4-Regular.woff2',
+  'lib/mathlive/fonts/KaTeX_Typewriter-Regular.woff2',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'
 ];
 
@@ -25,7 +46,6 @@ self.addEventListener('fetch', (e) => {
     caches.match(e.request, { ignoreSearch: true }).then((hit) => {
       if (hit) return hit;
       return fetch(e.request).then((res) => {
-        // Guarda también las fuentes de Google la primera vez que se cargan.
         if (res.ok || res.type === 'opaque') {
           const copy = res.clone();
           caches.open(VERSION).then((c) => c.put(e.request, copy));

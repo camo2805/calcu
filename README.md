@@ -1,71 +1,74 @@
 # Calcu
 
-Calculadora científica libre para iPhone y Android, inspirada en la HP Prime G2, la Casio fx-CG50, la TI-Nspire CX II CAS y la Casio fx-991CW. Funciona sin conexión una vez instalada y no pasa por App Store ni Google Play.
+Calculadora científica gratuita y de código abierto para iPhone y Android, instalable desde el navegador (PWA). Combina ideas de la HP Prime G2, la Casio fx-CG50, la TI-Nspire CX II CAS y la Casio fx-991CW, con identidad propia.
 
-Versión actual: **0.1.0** (primera base funcional).
+Funciona con y sin conexión a internet una vez instalada.
 
-## Qué hace hoy
+## Novedades de la versión 0.2
 
-**Cálculo.** Operaciones científicas con vista previa en formato de libro de texto, resultado exacto o decimal (tecla S⇔D, como en Casio), grados o radianes, números complejos, matrices (determinante, inversa, valores propios, sistemas lineales), estadística y distribución normal, variables (`a = 5`), funciones de usuario (`f(x) = x^2`), `Ans`, historial reutilizable y conversión de unidades (`1000 bbl to m^3`, `100 km/h to m/s`). Incluye unidades petroleras: `bbl` (42 gal), `Mbbl`, `MMbbl`, `MBD`, `MMBD`, `MMBTU` y `TM`.
+- **Escritura natural**: fracciones, raíces, potencias, integrales, límites, sumatorias y matrices se escriben y se ven como en un libro (MathLive). La escritura lineal sigue disponible en Ajustes.
+- **Manual de usuario incorporado** (botón `?`): 18 secciones con buscador, ejemplos que se ejecutan con un toque y tabla de todas las teclas.
+- **Ayuda en cada tecla**: mantener pulsada una tecla muestra qué hace, también con SHIFT.
+- **CAS en capas**: Nerdamer, luego Algebrite y, si ninguno resuelve, métodos numéricos. Las primitivas se verifican derivando numéricamente y las soluciones de ecuaciones se comprueban sustituyendo.
+- Nuevos comandos: `taylor`, `nint` (integral numérica), `nsolve` (solución numérica en un intervalo).
+- Integrales impropias y con singularidades (cuadratura tanh-sinh), ecuaciones trascendentes como `cos(x) = x` y raíces complejas de polinomios.
+- **Gráficas de relaciones y desigualdades**: `x^2+y^2=9`, `y>x^2-2`, con sombreado.
+- **Tabla de valores** en el modo Gráfica.
+- Tecla de fracción y matrices 2×2 y 3×3 en el teclado.
 
-**CAS.** Derivadas, integrales indefinidas y definidas, límites, factorización, expansión, simplificación, fracciones parciales, sumatorias, ecuaciones (`x^2-5x+6=0`), sistemas (`2x+y=5; x-y=1`) y definiciones simbólicas (`f(x) := x^2+1`).
+## Qué hace
 
-**Gráfica.** Hasta cuatro funciones, arrastrar para mover, pellizcar para acercar, trazado con coordenadas, raíces, máximos y mínimos, e intersecciones en la ventana visible.
+- **Cálculo**: resultados exactos y decimales (S⇔D), variables y funciones, matrices, estadística, distribución normal, complejos y unidades, incluidas las petroleras (`bbl`, `Mbbl`, `MMbbl`, `MBD`, `MMBD`, `MMBTU`, `TM`).
+- **CAS**: derivadas, integrales, límites, series de Taylor, factorización, fracciones parciales, sumatorias, ecuaciones y sistemas.
+- **Gráfica**: hasta 4 funciones o relaciones; trazar, raíces, máximos y mínimos, intersecciones, tabla de valores.
+- Tres temas de color y formato de números `1.234,5` o `1 234.5`.
 
-**Teclado.** Diseño de 5 columnas con segunda función (SHIFT), borrado inteligente de funciones completas y opción de usar el teclado del teléfono.
+## Instalar en el teléfono
 
-## Instalarla en el teléfono
+1. Abre el enlace de la app en **Safari** (iPhone) o **Chrome** (Android).
+2. iPhone: botón Compartir → **Agregar a pantalla de inicio**. Android: menú ⋮ → **Instalar app** (en Samsung Internet: **Agregar página a → Pantalla de inicio**).
 
-Primero hay que publicarla (ver la sección siguiente). Con el enlace de GitHub Pages:
+## Publicar una versión nueva en GitHub Pages
 
-**iPhone:** abre el enlace en **Safari** (no en Chrome), toca el botón Compartir y elige *Agregar a pantalla de inicio*. Ábrela una vez con conexión para que se guarde; después funciona en modo avión.
+1. Sube todos los archivos al repositorio, respetando las carpetas (incluidas `lib/mathlive/` y `lib/mathlive/fonts/`).
+2. Cambia `VERSION` en `sw.js` (por ejemplo `calcu-v0.2.1`). Si no lo cambias, los teléfonos seguirán usando la versión guardada.
+3. Los teléfonos descargan la versión nueva en segundo plano y la aplican al cerrar y volver a abrir la app.
 
-**Android:** abre el enlace en **Chrome**, toca el menú de tres puntos y elige *Instalar app* (o *Agregar a pantalla principal*).
+## Estructura
 
-## Publicarla gratis en GitHub Pages
-
-1. Crea una cuenta en github.com si no tienes.
-2. Crea un repositorio nuevo, por ejemplo `calcu`, marcado como público.
-3. Sube todos los archivos de esta carpeta (botón *Add file → Upload files*, arrastra todo incluyendo las carpetas `lib` e `icons`).
-4. En el repositorio ve a *Settings → Pages*. En *Source* elige *Deploy from a branch*, rama `main`, carpeta `/ (root)`, y guarda.
-5. En uno o dos minutos la app queda en `https://TU-USUARIO.github.io/calcu/`. Ese es el enlace para ti y tus compañeros.
-
-Cada vez que publiques cambios, sube el número en `VERSION` dentro de `sw.js` (por ejemplo `calcu-v0.1.1`). Así los teléfonos detectan la versión nueva; se aplica al cerrar y volver a abrir la app.
-
-## Probarla en tu computadora
-
-Hace falta un servidor local (abrir `index.html` con doble clic no activa el modo sin conexión):
-
-```bash
-cd calcu
-python3 -m http.server 8000
+```
+index.html              La app completa (HTML, CSS y JavaScript)
+sw.js                   Service worker: uso sin conexión
+manifest.webmanifest    Datos de instalación
+icons/                  Iconos
+lib/                    Motores matemáticos
+  math.js               math.js 15.2.0
+  nerdamer.all.min.js   Nerdamer 1.1.13
+  algebrite.bundle-for-browser.js   Algebrite 1.4.0
+  mathlive/             MathLive 0.110.0 (editor y visualización) + fuentes KaTeX
+  licenses/             Licencias de cada librería
 ```
 
-Luego abre `http://localhost:8000`.
-
-## Cómo está hecha
-
-Todo vive en un solo archivo, `index.html` (HTML, CSS y JavaScript sin compilación), más tres librerías incluidas en `lib/`:
+## Librerías y licencias
 
 | Librería | Uso | Licencia |
 |---|---|---|
-| math.js 15.2.0 | Cálculo numérico, matrices, complejos, unidades | Apache-2.0 |
-| Nerdamer 1.1.13 | Álgebra simbólica (CAS) | MIT |
-| MathJax 3.2.2 | Presentación de fórmulas | Apache-2.0 |
+| [math.js](https://mathjs.org) | Cálculo numérico, matrices, unidades | Apache-2.0 |
+| [Nerdamer](https://nerdamer.com) | CAS principal | MIT |
+| [Algebrite](http://algebrite.org) | CAS de respaldo, series de Taylor, raíces de polinomios | MIT |
+| [MathLive](https://cortexjs.io/mathlive/) | Escritura natural y visualización de fórmulas | MIT |
 
-`sw.js` guarda la app en el teléfono y `manifest.webmanifest` le da nombre e ícono al instalarla.
+Calcu se distribuye bajo **GPL-3.0** (ver `LICENSE`).
 
-## Convenciones al escribir
+## Limitaciones conocidas
 
-El punto es el separador decimal y la coma separa argumentos: `round(3.14159, 2)`. En Ajustes puedes elegir que los resultados se muestren como `1.234,5` o `1 234.5`. Las gráficas siempre usan radianes. En Cálculo se asigna con `=` y en CAS con `:=`.
+- Algunas primitivas se muestran en una forma válida pero más larga de lo necesario (por ejemplo, la de `1/(x^3+1)`).
+- Las integrales definidas con límites infinitos se calculan numéricamente.
+- En ecuaciones sin solución exacta, la búsqueda numérica cubre el intervalo [−100; 100]; fuera de él hay que usar `nsolve`.
+- El CAS y las gráficas trabajan siempre en radianes.
 
 ## Hoja de ruta
 
-- **0.2:** editor en formato de libro de texto (fracciones y raíces que se escriben como se ven), tabla de valores y gráficas de ecuaciones implícitas y desigualdades (tipo *Advanced Graphing* de la HP Prime).
-- **0.3:** hojas de cálculo ligadas a gráficas y estadística de dos variables con regresiones.
-- **0.4:** documentos con páginas tipo TI-Nspire, deslizadores y gráficas 3D.
-- **0.5:** motor CAS Giac (el mismo de la HP Prime) en WebAssembly, programación en Python y modo RPN.
-
-## Licencia
-
-GPL-3.0. Puedes usarla, modificarla y compartirla; las versiones modificadas que distribuyas deben seguir siendo libres. Se eligió GPL-3.0 para poder incorporar Giac más adelante sin cambiar de licencia. Las licencias de las librerías incluidas están en `lib/licenses/`.
+- **0.3**: hojas de cálculo ligadas a gráficas; estadística de dos variables con regresiones.
+- **0.4**: documentos con páginas estilo TI-Nspire; deslizadores; gráficas 3D.
+- **0.5**: motor Giac (el CAS de la HP Prime) en WebAssembly; Python; modo RPN.

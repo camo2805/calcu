@@ -12,6 +12,8 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="lib/mathlive/mathlive-fonts.css">
+<link rel="stylesheet" href="lib/mathlive/mathlive-static.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600&display=swap" rel="stylesheet">
@@ -22,7 +24,7 @@
   --key:#F4F6F7; --key-num:#FFFFFF; --key-ink:#1F2933; --key-shadow:#AEB7BF;
   --op:#3A6A8C; --op-ink:#FFFFFF; --fn:#C5CDD4;
   --shift:#B87A08; --shift-bg:#E3A21A; --danger:#A8433C; --exe:#2E7A67;
-  --chip:#C3CBD2; --sheet:#EDF0F2; --err:#9C2F28;
+  --chip:#C3CBD2; --sheet:#EDF0F2; --err:#9C2F28; --code:#DDE2E6;
   --g1:#2F6FA3; --g2:#B5452F; --g3:#3E8E5A; --g4:#8A5AAE;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -35,8 +37,8 @@
     --lcd:#BCC7B6; --lcd-ink:#161F19; --lcd-muted:#46534A; --lcd-dot:rgba(22,31,25,.08); --lcd-edge:#0F161C;
     --key:#36424E; --key-num:#46535F; --key-ink:#EEF1F4; --key-shadow:#161D24;
     --op:#2F5D7C; --op-ink:#FFFFFF; --fn:#2C3742;
-    --shift:#F0B233; --shift-bg:#E3A21A; --danger:#9A3F39; --exe:#2B7362;
-    --chip:#33404C; --sheet:#2B3641; --err:#FFB4A8;
+    --shift:#F0B233; --danger:#9A3F39; --exe:#2B7362;
+    --chip:#33404C; --sheet:#2B3641; --code:#36424E;
     --g1:#1F5E94; --g2:#A63A25; --g3:#2F7A4A; --g4:#7A4B9E;
   }
 }
@@ -45,8 +47,8 @@
   --lcd:#BCC7B6; --lcd-ink:#161F19; --lcd-muted:#46534A; --lcd-dot:rgba(22,31,25,.08); --lcd-edge:#0F161C;
   --key:#36424E; --key-num:#46535F; --key-ink:#EEF1F4; --key-shadow:#161D24;
   --op:#2F5D7C; --op-ink:#FFFFFF; --fn:#2C3742;
-  --shift:#F0B233; --shift-bg:#E3A21A; --danger:#9A3F39; --exe:#2B7362;
-  --chip:#33404C; --sheet:#2B3641; --err:#FFB4A8;
+  --shift:#F0B233; --danger:#9A3F39; --exe:#2B7362;
+  --chip:#33404C; --sheet:#2B3641; --code:#36424E;
   --g1:#1F5E94; --g2:#A63A25; --g3:#2F7A4A; --g4:#7A4B9E;
 }
 :root[data-theme="slate"]{
@@ -54,8 +56,8 @@
   --lcd:#DCE2E5; --lcd-ink:#1A2330; --lcd-muted:#4E5B6B; --lcd-dot:rgba(26,35,48,.06); --lcd-edge:#141E2E;
   --key:#3B4E6D; --key-num:#4A5E80; --key-ink:#F1F4F8; --key-shadow:#16213A;
   --op:#5877A8; --op-ink:#FFFFFF; --fn:#32445F;
-  --shift:#F2B640; --shift-bg:#E3A21A; --danger:#A5463F; --exe:#2F7F6C;
-  --chip:#34476A; --sheet:#2E4060; --err:#FFB4A8;
+  --shift:#F2B640; --danger:#A5463F; --exe:#2F7F6C;
+  --chip:#34476A; --sheet:#2E4060; --code:#3B4E6D;
   --g1:#2B64A0; --g2:#B04428; --g3:#2F8050; --g4:#7F4FA6;
 }
 *,*::before,*::after{box-sizing:inherit}
@@ -70,15 +72,13 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 button:focus-visible,input:focus-visible{outline:2px solid var(--shift-bg);outline-offset:2px}
 #app{height:100%;display:flex;flex-direction:column;max-width:560px;margin:0 auto;padding:6px 10px 8px}
 
-/* Header */
-header{display:flex;align-items:center;gap:6px;padding:4px 0 8px}
-.tabs{display:flex;flex:1;background:var(--chip);border-radius:10px;padding:3px}
-.tabs button{flex:1;padding:7px 0;border-radius:8px;font-weight:600;font-size:15px;color:var(--muted)}
+header{display:flex;align-items:center;gap:5px;padding:4px 0 8px}
+.tabs{display:flex;flex:1;min-width:0;background:var(--chip);border-radius:10px;padding:3px}
+.tabs button{flex:1;padding:7px 0;border-radius:8px;font-weight:600;font-size:15px;color:var(--muted);white-space:nowrap}
 .tabs button[aria-selected="true"]{background:var(--key-num);color:var(--ink);box-shadow:0 1px 0 var(--key-shadow)}
-.iconbtn{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--chip)}
+.iconbtn{width:36px;height:36px;flex:none;border-radius:10px;display:grid;place-items:center;background:var(--chip);font-weight:700;font-size:17px}
 .iconbtn svg{width:20px;height:20px;stroke:var(--ink);fill:none;stroke-width:1.8}
 
-/* LCD */
 #screen{flex:1;min-height:0;display:flex;flex-direction:column}
 .lcd{
   flex:1;min-height:0;display:flex;flex-direction:column;
@@ -95,66 +95,70 @@ header{display:flex;align-items:center;gap:6px;padding:4px 0 8px}
 #status .shiftflag{display:none}
 body.shift #status .shiftflag{display:inline;background:var(--shift-bg);color:#1C1A12;border-color:var(--shift-bg)}
 #hist{flex:1;min-height:0;overflow-y:auto;padding:4px 10px;display:flex;flex-direction:column;gap:2px;-webkit-overflow-scrolling:touch}
-#hist .empty{margin:auto;text-align:center;color:var(--lcd-muted);font-size:14px;line-height:1.5;max-width:30ch}
+#hist .empty{margin:auto;text-align:center;color:var(--lcd-muted);font-size:14px;line-height:1.5;max-width:32ch}
+#hist .empty button{margin-top:10px;padding:6px 12px;border-radius:6px;background:var(--lcd-ink);color:var(--lcd);font-weight:600;font-size:14px}
 .entry{border-bottom:1px solid rgba(0,0,0,.08);padding:4px 0 6px}
-.entry .in{color:var(--lcd-muted);overflow-x:auto;font-size:13px;cursor:pointer;text-align:left;white-space:nowrap}
-.entry .out{overflow-x:auto;text-align:right;cursor:pointer;font-size:20px;white-space:nowrap;padding:2px 0}
-.entry .alt{text-align:right;color:var(--lcd-muted);font-size:14px;overflow-x:auto;white-space:nowrap}
-.entry .err{text-align:right;color:var(--err);font-weight:600;font-size:14px}
-:root[data-theme] .entry .err, .entry .err{color:#9C2F28}
-.entry mjx-container{margin:2px 0!important}
-.in mjx-container{text-align:left!important}
-.out mjx-container,.alt mjx-container{text-align:right!important}
-#edit{border-top:1px solid rgba(0,0,0,.12);padding:4px 10px 8px}
-#preview{min-height:30px;overflow-x:auto;color:var(--lcd-ink);font-size:17px;white-space:nowrap;padding:2px 0}
-#preview mjx-container{text-align:left!important;margin:2px 0!important}
+.entry .in{color:var(--lcd-muted);overflow-x:auto;font-size:14px;cursor:pointer;text-align:left;white-space:nowrap;padding:2px 0}
+.entry .out{overflow-x:auto;text-align:right;cursor:pointer;font-size:20px;white-space:nowrap;padding:3px 0}
+.entry .alt{text-align:right;color:var(--lcd-muted);font-size:15px;overflow-x:auto;white-space:nowrap}
+.entry .note{text-align:right;color:var(--lcd-muted);font-size:12px;font-style:italic}
+.entry .err{text-align:right;color:#9C2F28;font-weight:600;font-size:14px;white-space:normal}
+.ML__latex{color:inherit}
+#edit{border-top:1px solid rgba(0,0,0,.12);padding:6px 10px 8px}
+#preview{min-height:28px;overflow-x:auto;color:var(--lcd-ink);font-size:17px;white-space:nowrap;padding:2px 0}
 #preview.bad{opacity:.45}
+#preview[hidden]{display:none}
 .inrow{display:flex;gap:6px;align-items:center}
-#expr:focus{outline:none;border-color:var(--lcd-ink)}
-#expr{
-  flex:1;min-width:0;font:500 20px/1.2 "Barlow",system-ui,sans-serif;
-  background:rgba(255,255,255,.35);color:var(--lcd-ink);border:1px solid rgba(0,0,0,.15);
-  border-radius:6px;padding:6px 8px;-webkit-user-select:text;user-select:text;caret-color:var(--lcd-ink);
+#expr,math-field{
+  flex:1;min-width:0;
+  background:rgba(255,255,255,.35);color:var(--lcd-ink);border:1px solid rgba(0,0,0,.18);
+  border-radius:6px;
 }
-.smallbtn{font-size:13px;font-weight:600;padding:6px 9px;border-radius:6px;background:rgba(0,0,0,.08);color:var(--lcd-ink)}
+#expr{font:500 20px/1.2 "Barlow",system-ui,sans-serif;padding:6px 8px;-webkit-user-select:text;user-select:text;caret-color:var(--lcd-ink)}
+#expr:focus{outline:none;border-color:var(--lcd-ink)}
+#expr[hidden],math-field[hidden]{display:none}
+math-field{
+  font-size:23px;padding:4px 8px;min-height:46px;
+  --caret-color:var(--lcd-ink); --selection-background-color:rgba(46,122,103,.25);
+  --placeholder-color:var(--lcd-muted); --contains-highlight-background-color:rgba(0,0,0,.05);
+  --smart-fence-color:var(--lcd-muted);
+}
+math-field:focus-within{outline:none;border-color:var(--lcd-ink)}
+math-field::part(virtual-keyboard-toggle),math-field::part(menu-toggle){display:none}
+.smallbtn{font-size:13px;font-weight:600;padding:6px 9px;border-radius:6px;background:rgba(0,0,0,.08);color:var(--lcd-ink);flex:none}
 .smallbtn[aria-pressed="true"]{background:var(--lcd-ink);color:var(--lcd)}
 
-/* Graph */
 #graph{flex:1;min-height:0;display:flex;flex-direction:column;gap:6px}
 #graph[hidden]{display:none}
 .funcs{display:grid;gap:4px}
 .frow{display:flex;align-items:center;gap:6px;background:var(--chip);border-radius:8px;padding:3px 6px}
 .frow .dot{width:22px;height:22px;border-radius:50%;border:3px solid var(--c);background:var(--c);flex:none}
 .frow .dot[aria-pressed="false"]{background:transparent}
-.frow .lab{font-weight:600;font-size:14px;width:44px;white-space:nowrap;text-align:left;color:var(--muted);border-radius:4px;padding:2px}
+.frow .lab{font-weight:600;font-size:14px;width:44px;white-space:nowrap;text-align:left;color:var(--muted);border-radius:4px;padding:2px 4px;flex:none}
 .frow.sel .lab{background:var(--ink);color:var(--bg)}
 .frow input{flex:1;min-width:0;font:500 16px "Barlow",system-ui,sans-serif;background:var(--key-num);color:var(--key-ink);border:0;border-radius:6px;padding:6px 8px;-webkit-user-select:text;user-select:text}
 .canvaswrap{flex:1;min-height:150px;position:relative;border-radius:12px;border:2px solid var(--lcd-edge);overflow:hidden;background:var(--lcd)}
 #cv{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
-#readout{white-space:pre-wrap;min-height:22px;font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.35}
+#readout{min-height:22px;font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.35;white-space:pre-wrap}
 .gbar{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
 .gbar::-webkit-scrollbar{display:none}
 .gbar button{flex:none;padding:7px 11px;border-radius:8px;background:var(--chip);font-weight:600;font-size:14px}
 .gbar button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 
-/* Chips */
 #chips{display:flex;gap:6px;overflow-x:auto;padding:8px 0 6px;scrollbar-width:none}
 #chips::-webkit-scrollbar{display:none}
 #chips button{flex:none;padding:6px 11px;border-radius:14px;background:var(--chip);font-size:14px;font-weight:600;white-space:nowrap}
 #chips:empty{display:none}
 
-/* Keypad */
 #pad{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 #pad[hidden]{display:none}
 .key{
   position:relative;height:clamp(40px,6.3vh,58px);border-radius:9px;
-  background:var(--key);color:var(--key-ink);
-  box-shadow:0 2px 0 var(--key-shadow);
+  background:var(--key);color:var(--key-ink);box-shadow:0 2px 0 var(--key-shadow);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
-  font-family:"Barlow Semi Condensed","Barlow",system-ui,sans-serif;
-  transition:transform .05s;
+  font-family:"Barlow Semi Condensed","Barlow",system-ui,sans-serif;transition:transform .05s;
 }
-.key:active,.key.down{transform:translateY(2px);box-shadow:0 0 0 var(--key-shadow)}
+.key.down{transform:translateY(2px);box-shadow:0 0 0 var(--key-shadow)}
 .key .m{font-size:19px;font-weight:600;line-height:1}
 .key .s{font-size:11px;font-weight:600;color:var(--shift);line-height:1;min-height:11px}
 .key sup{font-size:.65em}
@@ -169,22 +173,29 @@ body.shift #status .shiftflag{display:inline;background:var(--shift-bg);color:#1
 .key.danger .s{color:#FFD27A}
 .key.exe{background:var(--exe);color:#fff}
 .key.exe .s{color:#FFD27A}
+.key .frac{display:inline-flex;flex-direction:column;align-items:center;line-height:.9;font-size:13px}
+.key .frac i{display:block;width:12px;height:9px;border:1.5px solid currentColor;border-radius:2px}
+.key .frac b{display:block;width:16px;height:0;border-top:2px solid currentColor;margin:2px 0}
 body.shift .key .s{background:var(--shift-bg);color:#1C1A12;border-radius:3px;padding:0 3px}
 body.shift .key.shiftk{outline:2px solid var(--ink)}
 
-/* Sheet */
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);max-width:92%;
+  background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;font-size:14px;line-height:1.4;z-index:30;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+#toast[hidden]{display:none}
+#toast b{display:block;font-size:15px}
+
 #sheetback{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:10}
 #sheet{
   position:fixed;left:0;right:0;bottom:0;z-index:11;max-width:560px;margin:0 auto;
   background:var(--sheet);color:var(--ink);border-radius:16px 16px 0 0;
-  max-height:78%;display:flex;flex-direction:column;
+  max-height:86%;display:flex;flex-direction:column;
   padding:10px 14px calc(14px + env(safe-area-inset-bottom,0px));
   box-shadow:0 -6px 24px rgba(0,0,0,.25);
 }
 #sheet[hidden],#sheetback[hidden]{display:none}
-.sheethead{display:flex;align-items:center;justify-content:space-between;padding-bottom:8px}
-.sheethead h2{margin:0;font-size:18px;font-weight:600}
-.sheetbody{overflow-y:auto;-webkit-overflow-scrolling:touch}
+.sheethead{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:8px}
+.sheethead h2{margin:0;font-size:18px;font-weight:600;flex:1}
+.sheetbody{overflow-y:auto;-webkit-overflow-scrolling:touch;-webkit-user-select:text;user-select:text}
 .cats{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
 .cats::-webkit-scrollbar{display:none}
 .cats button{flex:none;padding:6px 11px;border-radius:14px;background:var(--chip);font-weight:600;font-size:14px}
@@ -193,7 +204,6 @@ body.shift .key.shiftk{outline:2px solid var(--ink)}
 .item{text-align:left;background:var(--key-num);color:var(--key-ink);border-radius:8px;padding:8px 10px;box-shadow:0 1px 0 var(--key-shadow)}
 .item b{display:block;font-size:15px;font-weight:600}
 .item small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
-:root[data-theme="dark"] .item small,:root[data-theme="slate"] .item small{color:#B5C0CC}
 .setrow{padding:10px 0;border-bottom:1px solid var(--line)}
 .setrow > span{display:block;font-weight:600;margin-bottom:6px}
 .seg{display:flex;background:var(--chip);border-radius:9px;padding:3px}
@@ -201,9 +211,41 @@ body.shift .key.shiftk{outline:2px solid var(--ink)}
 .seg button[aria-pressed="true"]{background:var(--key-num);color:var(--ink)}
 .wide{width:100%;padding:10px;border-radius:9px;background:var(--chip);font-weight:600;margin-top:6px}
 .about{font-size:13px;color:var(--muted);line-height:1.5;margin:10px 0 0}
+
+/* Manual */
+.msearch{width:100%;font:500 16px "Barlow",system-ui,sans-serif;padding:9px 12px;border-radius:9px;border:1px solid var(--line);background:var(--key-num);color:var(--ink);margin-bottom:10px}
+.mindex{display:grid;gap:6px}
+.mindex button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;background:var(--key-num);color:var(--key-ink);padding:10px 12px;border-radius:9px;box-shadow:0 1px 0 var(--key-shadow)}
+.mindex button b{font-size:16px;font-weight:600}
+.mindex button small{font-size:13px;color:var(--muted);margin-top:2px}
+.mdoc{font-size:15px;line-height:1.55;max-width:62ch}
+.mdoc h3{font-size:19px;margin:4px 0 8px}
+.mdoc h4{font-size:15px;margin:16px 0 4px}
+.mdoc p{margin:0 0 10px}
+.mdoc ul{margin:0 0 10px;padding-left:20px}
+.mdoc li{margin-bottom:4px}
+.mdoc code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;background:var(--code);padding:1px 5px;border-radius:4px;white-space:nowrap}
+.mdoc table{border-collapse:collapse;width:100%;font-size:14px;margin:4px 0 12px}
+.mdoc td,.mdoc th{border-bottom:1px solid var(--line);padding:5px 4px;text-align:left;vertical-align:top}
+.mdoc th{font-weight:600}
+.mtable{overflow-x:auto}
+.try{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 14px}
+.try button{padding:6px 10px;border-radius:8px;background:var(--exe);color:#fff;font-weight:600;font-size:14px;text-align:left}
+.try button span{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:500;font-size:13px;opacity:.9;margin-left:4px}
+.mnav{display:flex;justify-content:space-between;gap:8px;margin-top:14px}
+.mnav button{padding:8px 12px;border-radius:8px;background:var(--chip);font-weight:600;font-size:14px}
+.backbtn{padding:6px 10px;border-radius:8px;background:var(--chip);font-weight:600;font-size:14px}
+
+/* Tabla */
+.tblctl{display:flex;gap:8px;margin-bottom:8px}
+.tblctl label{flex:1;font-size:13px;font-weight:600;color:var(--muted)}
+.tblctl input{display:block;width:100%;margin-top:3px;font:500 16px "Barlow",system-ui,sans-serif;padding:7px 9px;border-radius:8px;border:1px solid var(--line);background:var(--key-num);color:var(--ink)}
+.vtable{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:14px}
+.vtable th,.vtable td{padding:5px 6px;border-bottom:1px solid var(--line);text-align:right}
+.vtable th{position:sticky;top:0;background:var(--sheet);font-weight:600}
+
 .loading{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);z-index:20;font-weight:600;color:var(--muted)}
 @media (prefers-reduced-motion: reduce){.key{transition:none}}
-@media (min-height:880px){#chips button{font-size:15px}}
 </style>
 </head>
 <body>
@@ -215,6 +257,7 @@ body.shift .key.shiftk{outline:2px solid var(--ink)}
       <button role="tab" data-mode="cas" aria-selected="false">CAS</button>
       <button role="tab" data-mode="graph" aria-selected="false">Gráfica</button>
     </div>
+    <button class="iconbtn" id="btnHelp" aria-label="Manual de usuario">?</button>
     <button class="iconbtn" id="btnCat" aria-label="Catálogo de funciones">
       <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
     </button>
@@ -228,13 +271,15 @@ body.shift .key.shiftk{outline:2px solid var(--ink)}
       <div id="status">
         <span id="stAngle">DEG</span>
         <span id="stExact">Exacto</span>
+        <span id="stCas" hidden>Radianes</span>
         <span class="shiftflag">SHIFT</span>
       </div>
       <div id="hist" aria-live="polite"></div>
       <div id="edit">
-        <div id="preview"></div>
+        <div id="preview" hidden></div>
         <div class="inrow">
-          <input id="expr" inputmode="none" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Expresión">
+          <math-field id="mf" aria-label="Expresión"></math-field>
+          <input id="expr" hidden inputmode="none" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Expresión">
           <button class="smallbtn" id="btnKbd" aria-pressed="false" aria-label="Usar teclado del teléfono">abc</button>
         </div>
       </div>
@@ -249,6 +294,7 @@ body.shift .key.shiftk{outline:2px solid var(--ink)}
         <button id="gRoots">Raíces</button>
         <button id="gExt">Máx/Mín</button>
         <button id="gInt">Intersección</button>
+        <button id="gTable">Tabla</button>
         <button id="gFit">Ajustar Y</button>
         <button id="gStd">Estándar</button>
         <button id="gPad" aria-pressed="false">Teclas</button>
@@ -260,38 +306,34 @@ body.shift .key.shiftk{outline:2px solid var(--ink)}
   <div id="pad"></div>
 </div>
 
+<div id="toast" hidden role="status"></div>
 <div id="sheetback" hidden></div>
 <div id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
   <div class="sheethead"><h2 id="sheetTitle"></h2><button class="iconbtn" id="sheetClose" aria-label="Cerrar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div class="sheetbody" id="sheetBody"></div>
 </div>
 
-<script>
-window.__mjReady = new Promise(function(res){
-  window.MathJax = {
-    tex:{packages:{'[+]':[]}},
-    svg:{fontCache:'local'},
-    startup:{typeset:false, ready:function(){ MathJax.startup.defaultReady(); MathJax.startup.promise.then(function(){ try{ document.head.appendChild(MathJax.svgStylesheet()); }catch(e){} res(); }); }}
-  };
-});
-</script>
 <script src="lib/math.js"></script>
 <script src="lib/nerdamer.all.min.js"></script>
-<script src="lib/tex-svg-full.js" async></script>
+<script src="lib/algebrite.bundle-for-browser.js"></script>
+<script src="lib/mathlive/mathlive.min.js"></script>
 <script>
 (function(){
 'use strict';
+var VERSION = '0.2.0';
 var $ = function(s){ return document.querySelector(s); };
+var each = function(list, fn){ Array.prototype.forEach.call(list, fn); };
 
-/* ---------- Estado ---------- */
+/* ================= Estado ================= */
 var KEY = 'calcu.v1';
-var DEF = { mode:'calc', angle:'DEG', exact:true, comma:true, digits:12, theme:'auto',
-  history:[], vars:{}, casDefs:[], ans:0,
+var DEF = { mode:'calc', angle:'DEG', exact:true, comma:true, digits:12, theme:'auto', input:'natural',
+  history:[], vars:{}, casDefs:[], ans:0, seenManual:false,
   funcs:[{e:'sin(x)',on:true},{e:'x^2/10-2',on:true},{e:'',on:true},{e:'',on:true}], gsel:0, view:null };
 var S = (function(){
   try{ var raw = localStorage.getItem(KEY); if(raw){ var o = JSON.parse(raw); return Object.assign({}, DEF, o); } }catch(e){}
   return JSON.parse(JSON.stringify(DEF));
 })();
+if(!S.input) S.input = 'natural';
 var ansVal = S.ans;
 var userScope = Object.assign({}, S.vars);
 function save(){
@@ -303,15 +345,12 @@ function save(){
   }catch(e){}
 }
 
-/* ---------- Motor ---------- */
-var BBL = '158.987294928 liter';
-try{ math.createUnit('bbl', BBL, {override:true}); }catch(e){}
+/* ================= Motor numérico ================= */
+try{ math.createUnit('bbl', '158.987294928 liter', {override:true}); }catch(e){}
 [['MBD','1000 bbl/day'],['MMBD','1e6 bbl/day'],['Mbbl','1000 bbl'],['MMbbl','1e6 bbl'],['MMBTU','1e6 BTU'],['TM','1 tonne']].forEach(function(u){
   try{ math.createUnit(u[0], u[1]); }catch(e){}
 });
-
 var BUILTIN = {};
-function erf(x){ return math.erf(x); }
 function makeScope(forceRad){
   var sc = Object.assign({}, userScope);
   var extra = {
@@ -320,7 +359,7 @@ function makeScope(forceRad){
     nCr: function(a,b){ return math.combinations(a,b); },
     nPr: function(a,b){ return math.permutations(a,b); },
     normpdf: function(x,m,s){ m=m||0; s=s||1; return Math.exp(-0.5*Math.pow((x-m)/s,2))/(s*Math.sqrt(2*Math.PI)); },
-    normcdf: function(x,m,s){ m=m||0; s=s||1; return 0.5*(1+erf((x-m)/(s*Math.SQRT2))); }
+    normcdf: function(x,m,s){ m=m||0; s=s||1; return 0.5*(1+math.erf((x-m)/(s*Math.SQRT2))); }
   };
   if(S.angle==='DEG' && !forceRad){
     var k = Math.PI/180;
@@ -336,18 +375,21 @@ function makeScope(forceRad){
   Object.keys(extra).forEach(function(n){ BUILTIN[n]=true; sc[n]=extra[n]; });
   return sc;
 }
-
 function prep(s){
-  return s.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/π/g,'pi').replace(/√\(/g,'sqrt(');
+  return String(s).replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/π/g,'pi').replace(/√\(/g,'sqrt(').replace(/∞/g,'Infinity');
+}
+function isUserFn(name){
+  if(typeof userScope[name]==='function') return true;
+  for(var i=0;i<S.casDefs.length;i++) if(S.casDefs[i].t==='f' && S.casDefs[i].n===name) return true;
+  return false;
 }
 
-/* ---------- Formato numérico ---------- */
+/* ================= Formato ================= */
 function trimZeros(s){ if(s.indexOf('.')<0) return s; s=s.replace(/0+$/,''); return s.replace(/\.$/,''); }
 function group(s){
   var neg = s.charAt(0)==='-'; if(neg) s=s.slice(1);
   var p = s.split('.'), i=p[0], f=p[1];
-  var sep = S.comma ? '.' : '\u2009';
-  i = i.replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+  i = i.replace(/\B(?=(\d{3})+(?!\d))/g, S.comma ? '.' : '\u2009');
   return (neg?'-':'') + i + (f ? (S.comma?',':'.') + f : '');
 }
 function numParts(x, digits){
@@ -368,8 +410,8 @@ function fmtNum(x, digits){
   var m = p.m.replace('-','−');
   return p.e===null ? m : m + '×10^' + p.e;
 }
-function texNum(x){
-  var p = numParts(x);
+function texNum(x, digits){
+  var p = numParts(x, digits);
   if(p.m==='NaN') return '\\text{indefinido}';
   if(p.m==='inf') return '\\infty'; if(p.m==='-inf') return '-\\infty';
   var m = p.m.replace(/,/g,'{,}').replace(/\u2009/g,'\\,');
@@ -379,40 +421,289 @@ function machine(x){ return trimZeros(Number(x).toPrecision(15)).replace(/e\+?/,
 function esc(s){ return String(s).replace(/[\\{}$&#^_%~]/g, function(c){ return '\\'+c; }); }
 function texText(s){ return '\\text{' + esc(s) + '}'; }
 
-/* ---------- TeX ---------- */
+/* ================= TeX ================= */
 var FN_TEX = {sin:'\\sin',cos:'\\cos',tan:'\\tan',sec:'\\sec',csc:'\\csc',cot:'\\cot',
   asin:'\\arcsin',acos:'\\arccos',atan:'\\arctan',sinh:'\\sinh',cosh:'\\cosh',tanh:'\\tanh',
-  ln:'\\ln',log:'\\ln',exp:'\\exp',arcsin:'\\arcsin',arccos:'\\arccos',arctan:'\\arctan',abs:'\\operatorname{abs}'};
+  ln:'\\ln',log:'\\ln',exp:'\\exp',arcsin:'\\arcsin',arccos:'\\arccos',arctan:'\\arctan'};
 function cleanTeX(t){
-  return t.replace(/\\mathrm\{([a-z]+)\}/g, function(m,f){ return FN_TEX[f] || '\\operatorname{'+f+'}'; })
+  return String(t).replace(/\\mathrm\{([a-z]+)\}(?=\\left\(|\()/g, function(m,f){ return FN_TEX[f] || '\\operatorname{'+f+'}'; })
+          .replace(/\\mathrm\{(sin|cos|tan|ln|log|exp|asin|acos|atan|sinh|cosh|tanh|sec|csc|cot)\}/g, function(m,f){ return FN_TEX[f]; })
           .replace(/\\cdot\s*(?=\\?[a-zA-Z(])/g, '\\,');
 }
-function mathjsTeX(expr){
-  var e = prep(expr);
-  var m = e.match(/^([^=<>!]+)=([^=].*)$/);
+var TEXOPT = {parenthesis:'keep', implicit:'hide'};
+function mathjsTeX(expr, forCas){
+  var e = prep(expr).trim();
+  if(!e) return '';
+  if(e.indexOf(';')>=0 && (forCas || S.mode==='cas')){
+    var parts = e.split(';').map(function(q){ return q.trim(); }).filter(Boolean);
+    var tt = parts.map(function(q){ return mathjsTeX(q, true); });
+    return tt.every(Boolean) ? tt.join(';\\;') : null;
+  }
   try{
-    if(e.indexOf(':=')<0 && m && S.mode==='cas'){
-      return cleanTeX(math.parse(m[1]).toTex({parenthesis:'keep',implicit:'hide'})) + '=' + cleanTeX(math.parse(m[2]).toTex({parenthesis:'keep',implicit:'hide'}));
-    }
     if(e.indexOf(':=')>=0){
       var p = e.split(':=');
-      return cleanTeX(math.parse(p[0]).toTex()) + ':=' + cleanTeX(math.parse(p[1]).toTex({parenthesis:'keep',implicit:'hide'}));
+      return cleanTeX(math.parse(p[0]).toTex()) + ':=' + cleanTeX(math.parse(p[1]).toTex(TEXOPT));
     }
-    return cleanTeX(math.parse(e).toTex({parenthesis:'keep',implicit:'hide'}));
+    var m = e.match(/^([^=<>!]+)(=|<=|>=|<|>)([^=].*)$/);
+    if(m && (forCas || S.mode==='cas' || m[2]!=='=')){
+      var rel = {'=':'=','<=':'\\le ','>=':'\\ge ','<':'<','>':'>'}[m[2]];
+      return cleanTeX(math.parse(m[1]).toTex(TEXOPT)) + rel + cleanTeX(math.parse(m[3]).toTex(TEXOPT));
+    }
+    return cleanTeX(math.parse(e).toTex(TEXOPT));
   }catch(err){ return null; }
 }
 function nTeX(r){ return cleanTeX(r.toTeX()); }
-
-var mjq = Promise.resolve();
-function renderTeX(el, tex, display){
-  mjq = mjq.then(function(){ return window.__mjReady; }).then(function(){
-    el.innerHTML='';
-    return MathJax.tex2svgPromise('\\displaystyle '+tex, {display:false}).then(function(node){ el.appendChild(node); });
-  }).catch(function(){ el.textContent = tex; });
-  return mjq;
+function renderTeX(el, tex){
+  try{ el.innerHTML = MathLive.convertLatexToMarkup('\\displaystyle ' + tex); }
+  catch(e){ el.textContent = tex; }
 }
 
-/* ---------- Resultado mathjs a salida ---------- */
+/* ================= LaTeX (escritura natural) → expresión lineal ================= */
+var FUNC_CMD = {'\\sin':'sin','\\cos':'cos','\\tan':'tan','\\sec':'sec','\\csc':'csc','\\cot':'cot',
+  '\\arcsin':'asin','\\arccos':'acos','\\arctan':'atan','\\sinh':'sinh','\\cosh':'cosh','\\tanh':'tanh',
+  '\\ln':'ln','\\log':'log10','\\exp':'exp','\\det':'det','\\gcd':'gcd','\\max':'max','\\min':'min','\\arg':'arg'};
+var INV = {sin:'asin',cos:'acos',tan:'atan',sec:'asec',csc:'acsc',cot:'acot',sinh:'asinh',cosh:'acosh',tanh:'atanh'};
+var GREEK = /^\\(alpha|beta|gamma|delta|epsilon|varepsilon|zeta|eta|theta|vartheta|iota|kappa|lambda|mu|nu|xi|rho|sigma|tau|upsilon|phi|varphi|chi|psi|omega|Gamma|Delta|Theta|Lambda|Sigma|Phi|Psi|Omega)$/;
+var SKIP = {'\\,':1,'\\;':1,'\\:':1,'\\!':1,'\\ ':1,'\\quad':1,'\\qquad':1,'\\displaystyle':1,'\\textstyle':1,'\\limits':1,'\\nolimits':1};
+function tokLatex(s){ return (String(s).match(/\\[a-zA-Z]+|\\.|[0-9]|\s+|./g)||[]).filter(function(t){ return !/^\s+$/.test(t) && t!=='~'; }); }
+function PH(){ var e = new Error('Completa los recuadros vacíos'); e.friendly = true; return e; }
+function readGroup(T,p){
+  if(T[p.i]==='{'){
+    var d=0, start=++p.i;
+    for(;p.i<T.length;p.i++){ if(T[p.i]==='{') d++; else if(T[p.i]==='}'){ if(d===0) break; d--; } }
+    var g = T.slice(start,p.i); p.i++; return g;
+  }
+  if(p.i>=T.length) throw PH();
+  return [T[p.i++]];
+}
+function groupText(g){ return g.join('').replace(/\\/g,''); }
+function sub(tokens){ return join(seq(tokens,{i:0},null)); }
+function isCloser(t){ return t===')' || t==='\\right' || t==='\\mright' || t===']' ; }
+function untilClose(T,p,closeTok){
+  // lee hasta el cierre correspondiente, respetando anidación
+  var start=p.i, d=0;
+  for(;p.i<T.length;p.i++){
+    var t=T[p.i];
+    if(t==='\\left' || t==='\\mleft' || t==='(' || t==='{' || t==='[') d++;
+    else if(t==='\\right' || t==='\\mright' || t===')' || t==='}' || t===']'){
+      if(d===0) break; d--;
+      if(t==='\\right' || t==='\\mright') p.i++;
+    }
+  }
+  var inner = T.slice(start,p.i);
+  if(T[p.i]==='\\right' || T[p.i]==='\\mright') p.i+=2; else p.i++;
+  return inner;
+}
+function parseArg(T,p){
+  var t = T[p.i];
+  if(t==='\\left' || t==='\\mleft'){ var dl=T[p.i+1]; p.i+=2; var inner=untilClose(T,p); return dl==='|' ? 'abs('+sub(inner)+')' : sub(inner); }
+  if(t==='('){ p.i++; return sub(untilClose(T,p)); }
+  if(t==='{'){ return sub(readGroup(T,p)); }
+  var one = seq(T,p,null,1);
+  if(!one.length) throw PH();
+  return join(one);
+}
+function stopAdd(t){ return t==='+' || t==='-' || t==='=' || t===',' || t===';' || t==='<' || t==='>'; }
+function findDiff(T,from){
+  var d=0;
+  for(var j=from;j<T.length;j++){
+    var t=T[j];
+    if(t==='{' || t==='\\left' || t==='(') d++;
+    else if(t==='}' || t==='\\right' || t===')'){ if(d===0) return null; d--; }
+    if(d!==0) continue;
+    if((t==='d' || t==='\\differentialD') && /^[a-zA-Z]$/.test(T[j+1]||'')) return {j:j, v:T[j+1], len:2};
+    if(t==='\\mathrm' && T[j+1]==='{' && T[j+2]==='d' && T[j+3]==='}' && /^[a-zA-Z]$/.test(T[j+4]||'')) return {j:j, v:T[j+4], len:5};
+  }
+  return null;
+}
+function seq(T,p,stop,maxOne){
+  var out=[];
+  function push(c){ out.push(c); }
+  while(p.i<T.length){
+    if(maxOne && out.length>=maxOne && T[p.i]!=='^' && T[p.i]!=='_' && T[p.i]!=='!') break;
+    var t = T[p.i];
+    if(stop && stop(t)) break;
+    if(isCloser(t) && t!==']') break;
+    if(t==='}') break;
+    if(/^[0-9.]$/.test(t)){
+      var num=''; while(p.i<T.length && /^[0-9.]$/.test(T[p.i])){ num+=T[p.i]; p.i++; }
+      push({t:'num', s:num}); continue;
+    }
+    p.i++;
+    if(t==='^'){
+      var g = readGroup(T,p);
+      if(g.length===1 && (g[0]==='\\circ')){ push({t:'post', s:' deg'}); continue; }
+      var last = out[out.length-1]; if(!last) throw PH();
+      var ex = sub(g); if(ex==='') throw PH();
+      last.s = (last.t==='num' && /\./.test(last.s) ? '('+last.s+')' : last.s) + '^' + (/^[A-Za-z0-9.]+$/.test(ex) ? ex : '('+ex+')');
+      if(last.t==='var' || last.t==='num') last.t = 'grp';
+      continue;
+    }
+    if(t==='_'){
+      var gs = readGroup(T,p); var lastv = out[out.length-1];
+      if(lastv) lastv.s += '_' + groupText(gs).replace(/[^A-Za-z0-9]/g,'');
+      continue;
+    }
+    if(t==='\\left' || t==='\\mleft'){
+      var dl = T[p.i]; p.i++;
+      var inner = untilClose(T,p);
+      if(dl==='|') push({t:'func', s:'abs('+sub(inner)+')'});
+      else if(dl==='[' || dl==='\\lbrack') push({t:'grp', s:'['+sub(inner)+']'});
+      else push({t:'grp', s:'('+sub(inner)+')'});
+      continue;
+    }
+    if(t==='('){ push({t:'grp', s:'('+sub(untilClose(T,p))+')'}); continue; }
+    if(t==='['){ push({t:'grp', s:'['+sub(untilClose(T,p))+']'}); continue; }
+    if(t==='{'){ p.i--; push({t:'grp', s:'('+sub(readGroup(T,p))+')'}); continue; }
+    if(t==='|'){
+      var st=p.i; while(p.i<T.length && T[p.i]!=='|') p.i++;
+      var ab = T.slice(st,p.i); p.i++;
+      push({t:'func', s:'abs('+sub(ab)+')'}); continue;
+    }
+    if(t==='!'){ var l2 = out[out.length-1]; if(!l2) throw PH(); push({t:'post', s:'!'}); continue; }
+    if('+-=<>,;/*:'.indexOf(t)>=0){ push({t:'op', s:t}); continue; }
+    if(/^[a-zA-Z]$/.test(t)){ push({t:'var', s:t}); continue; }
+    if(t.charAt(0)!=='\\'){ continue; }
+    if(SKIP[t]) continue;
+    if(t==='\\placeholder'){ throw PH(); }
+    if(t==='\\frac' || t==='\\dfrac' || t==='\\tfrac'){
+      var A = readGroup(T,p), B = readGroup(T,p);
+      var sA = sub(A), sB = sub(B);
+      if(sA==='' || sB==='') throw PH();
+      var dm = sB.replace(/\s|\*/g,'').match(/^d([a-zA-Z])(\^\(?(\d)\)?)?$/);
+      if((sA==='d' || /^d\^\(?\d\)?$/.test(sA)) && dm){
+        var order = dm[3] ? ','+dm[3] : '';
+        var arg = parseArg(T,p);
+        push({t:'func', s:'diff('+arg+','+dm[1]+order+')'});
+      }else push({t:'grp', s:'(('+sA+')/('+sB+'))'});
+      continue;
+    }
+    if(t==='\\sqrt'){
+      var n = null;
+      if(T[p.i]==='['){ p.i++; var ns=p.i; while(p.i<T.length && T[p.i]!==']') p.i++; n = sub(T.slice(ns,p.i)); p.i++; if(n==='') throw PH(); }
+      var rad = sub(readGroup(T,p)); if(rad==='') throw PH();
+      push({t:'func', s: n ? 'nthRoot('+rad+','+n+')' : 'sqrt('+rad+')'}); continue;
+    }
+    if(FUNC_CMD[t]){
+      var fname = FUNC_CMD[t], pow = '', base = null;
+      if(T[p.i]==='_' && t==='\\log'){ p.i++; base = sub(readGroup(T,p)); }
+      if(T[p.i]==='^'){
+        p.i++; var pg = sub(readGroup(T,p));
+        if(pg==='-1' && INV[fname]) fname = INV[fname]; else pow = '^('+pg+')';
+      }
+      var farg = parseArg(T,p);
+      var call = base ? (base==='10' ? 'log10('+farg+')' : 'log('+farg+','+base+')') : fname+'('+farg+')';
+      push({t:'func', s: call + pow}); continue;
+    }
+    if(t==='\\operatorname' || t==='\\mathrm' || t==='\\text' || t==='\\mathit' || t==='\\textrm' || t==='\\mathbf'){
+      var w = groupText(readGroup(T,p)).trim();
+      if(w==='to'){ push({t:'op', s:' to '}); continue; }
+      if(w==='mod'){ push({t:'op', s:' mod '}); continue; }
+      if(w===''){ continue; }
+      var nx = T[p.i];
+      if((nx==='(' || nx==='\\left' || nx==='\\mleft') && (t==='\\operatorname' || w.length>1)){
+        var argsTxt = parseArg(T,p);
+        push({t:'func', s: w+'('+argsTxt+')'}); continue;
+      }
+      push({t:(w.length===1 ? 'var' : 'word'), s:w}); continue;
+    }
+    if(t==='\\int'){
+      var lo=null, hi=null;
+      for(var k=0;k<2;k++){
+        if(T[p.i]==='_'){ p.i++; lo = sub(readGroup(T,p)); }
+        else if(T[p.i]==='^'){ p.i++; hi = sub(readGroup(T,p)); }
+      }
+      var fd = findDiff(T,p.i), integrand, v='x';
+      if(fd){ integrand = sub(T.slice(p.i, fd.j)); v = fd.v; p.i = fd.j + fd.len; }
+      else { integrand = join(seq(T,p,null)); }
+      if(integrand==='') throw PH();
+      if(lo!==null || hi!==null){
+        if(!lo || !hi) throw PH();
+        push({t:'func', s:'defint('+integrand+','+lo+','+hi+','+v+')'});
+      }else push({t:'func', s:'integrate('+integrand+','+v+')'});
+      continue;
+    }
+    if(t==='\\sum' || t==='\\prod'){
+      var lower='', upper='';
+      for(var k2=0;k2<2;k2++){
+        if(T[p.i]==='_'){ p.i++; lower = sub(readGroup(T,p)); }
+        else if(T[p.i]==='^'){ p.i++; upper = sub(readGroup(T,p)); }
+      }
+      var lm = lower.match(/^([A-Za-z]\w*)=(.+)$/); if(!lm || !upper) throw PH();
+      var body = join(seq(T,p,stopAdd)); if(body==='') throw PH();
+      push({t:'func', s:(t==='\\sum'?'sum(':'product(')+body+','+lm[1]+','+lm[2]+','+upper+')'}); continue;
+    }
+    if(t==='\\lim'){
+      var lg = [];
+      if(T[p.i]==='_'){ p.i++; lg = readGroup(T,p); }
+      var ti = -1; for(var q=0;q<lg.length;q++){ if(lg[q]==='\\to' || lg[q]==='\\rightarrow' || lg[q]==='\\longrightarrow'){ ti=q; break; } }
+      if(ti<0) throw PH();
+      var lv = sub(lg.slice(0,ti)), la = sub(lg.slice(ti+1));
+      if(!lv || !la) throw PH();
+      var lb = join(seq(T,p,stopAdd)); if(lb==='') throw PH();
+      push({t:'func', s:'limit('+lb+','+lv+','+la+')'}); continue;
+    }
+    if(t==='\\begin'){
+      var env = groupText(readGroup(T,p));
+      var ms = p.i; while(p.i<T.length && T[p.i]!=='\\end') p.i++;
+      var body2 = T.slice(ms,p.i); p.i++; readGroup(T,p);
+      if(/matrix|array/.test(env)){
+        var rows=[[]], cell=[];
+        body2.forEach(function(x){
+          if(x==='&'){ rows[rows.length-1].push(cell); cell=[]; }
+          else if(x==='\\\\'){ rows[rows.length-1].push(cell); cell=[]; rows.push([]); }
+          else cell.push(x);
+        });
+        rows[rows.length-1].push(cell);
+        rows = rows.filter(function(r){ return r.some(function(c){ return c.length; }); });
+        push({t:'grp', s:'['+rows.map(function(r){ return r.map(function(c){ var v2=sub(c); if(v2==='') throw PH(); return v2; }).join(','); }).join(';')+']'});
+      }
+      continue;
+    }
+    if(t==='\\pi'){ push({t:'var', s:'pi'}); continue; }
+    if(t==='\\infty'){ push({t:'var', s:'Infinity'}); continue; }
+    if(t==='\\exponentialE'){ push({t:'var', s:'e'}); continue; }
+    if(t==='\\imaginaryI'){ push({t:'var', s:'i'}); continue; }
+    if(t==='\\cdot' || t==='\\times' || t==='\\ast'){ push({t:'op', s:'*'}); continue; }
+    if(t==='\\div'){ push({t:'op', s:'/'}); continue; }
+    if(t==='\\le' || t==='\\leq'){ push({t:'op', s:'<='}); continue; }
+    if(t==='\\ge' || t==='\\geq'){ push({t:'op', s:'>='}); continue; }
+    if(t==='\\ne' || t==='\\neq'){ push({t:'op', s:'!='}); continue; }
+    if(t==='\\lt'){ push({t:'op', s:'<'}); continue; }
+    if(t==='\\gt'){ push({t:'op', s:'>'}); continue; }
+    if(t==='\\coloneq' || t==='\\coloneqq'){ push({t:'op', s:':='}); continue; }
+    if(t==='\\colon'){ push({t:'op', s:':'}); continue; }
+    if(t==='\\to' || t==='\\rightarrow'){ push({t:'op', s:' to '}); continue; }
+    if(t==='\\%'){ push({t:'post', s:'/100'}); continue; }
+    if(t==='\\degree' || t==='\\circ'){ push({t:'post', s:' deg'}); continue; }
+    if(t==='\\lbrace' || t==='\\rbrace' || t==='\\{' || t==='\\}') continue;
+    if(GREEK.test(t)){ push({t:'var', s:t.slice(1)}); continue; }
+    push({t:'word', s:t.slice(1)});
+  }
+  return out;
+}
+var LEFTM = {num:1,var:1,word:1,grp:1,func:1,post:1}, RIGHTM = {num:1,var:1,word:1,grp:1,func:1};
+function join(ch){
+  var o='', prev=null;
+  for(var i=0;i<ch.length;i++){
+    var c = ch[i];
+    if(prev && LEFTM[prev.t] && RIGHTM[c.t]){
+      var fnCall = (prev.t==='var' || prev.t==='word') && c.t==='grp' && c.s.charAt(0)==='(' && isUserFn(prev.s);
+      if(!fnCall) o += '*';
+    }
+    o += c.s; prev = c;
+  }
+  return o.replace(/:\s*=/g, ':=');
+}
+function latexToExpr(tex){
+  var T = tokLatex(tex);
+  var p = {i:0};
+  var out = join(seq(T,p,null));
+  while(p.i < T.length){ p.i++; var more = join(seq(T,p,null)); if(more) out += (out && /[\w)]$/.test(out) && /^[\w(]/.test(more) ? '*' : '') + more; }
+  return out;
+}
+
+/* ================= Resultado mathjs → salida ================= */
 function matTeX(arr){
   var rows = Array.isArray(arr[0]) ? arr : [arr];
   return '\\begin{bmatrix}' + rows.map(function(r){ return r.map(cellTeX).join('&'); }).join('\\\\') + '\\end{bmatrix}';
@@ -456,7 +747,7 @@ function valueOut(v){
   return { tex:texText(String(v)), ins:String(v) };
 }
 
-/* ---------- Evaluación: Cálculo ---------- */
+/* ================= Evaluación: Cálculo ================= */
 var TRIG = /\b(a?(sin|cos|tan|sec|csc|cot)h?)\(/;
 function tryExact(expr){
   if(/[\[\]=<>]|\bto\b|\bin\b|\bdeg\b|°|nthRoot|cbrt|nCr|nPr|norm|mod\b|random|hex|bin|oct|[A-Z]{2,}(?!ns)/.test(expr)) return null;
@@ -465,35 +756,104 @@ function tryExact(expr){
     var subs = {};
     Object.keys(userScope).forEach(function(k){ if(typeof userScope[k]==='number') subs[k]=machine(userScope[k]); });
     if(typeof ansVal==='number') subs.Ans = machine(ansVal);
-    var e = expr.replace(/\bln\(/g,'log(');
-    var r = nerdamer(e, subs);
+    var r = nerdamer(expr.replace(/\bln\(/g,'log('), subs);
     if(r.variables().length) return null;
     var tex = nTeX(r);
     if(/\d{7,}/.test(tex) || tex.length>90) return null;
     return tex;
   }catch(err){ return null; }
 }
-function evalCalc(expr, forceDec){
-  var e = prep(expr);
+function evalCalc(e, forceDec){
+  e = fixDefLhs(e);
   var sc = makeScope(false);
   var v = math.evaluate(e, sc);
   Object.keys(sc).forEach(function(k){ if(!BUILTIN[k] && k!=='Ans') userScope[k]=sc[k]; });
   var out = valueOut(v);
-  var entry = { inTex: mathjsTeX(expr) || texText(expr), outTex: out.tex, ins: out.ins };
-  if(out.num!==undefined){ ansVal = out.num; }
-  else if(out.val!==undefined){ ansVal = out.val; }
+  var entry = { outTex: out.tex, ins: out.ins };
+  if(out.num!==undefined) ansVal = out.num; else if(out.val!==undefined) ansVal = out.val;
   if(!forceDec && typeof out.num==='number' && isFinite(out.num) && !Number.isInteger(out.num)){
     var ex = tryExact(e);
-    if(ex && ex.replace(/[{},\\ ]/g,'') !== out.tex.replace(/[{},\\ ]/g,'') && !/^-?\d+$/.test(ex)){
-      entry.exTex = ex;
-      entry.showEx = S.exact;
-    }
+    if(ex && !/^-?\d+$/.test(ex)){ entry.exTex = ex; entry.showEx = S.exact; }
   }
   return entry;
 }
 
-/* ---------- Evaluación: CAS ---------- */
+/* ================= Métodos numéricos ================= */
+function compileX(src, v){
+  v = v || 'x';
+  var c = math.compile(prep(src).replace(/\bInfinity\b/g,'Infinity')), sc = makeScope(true);
+  return function(x){ sc[v] = x; try{ var y = c.evaluate(sc); if(typeof y==='number') return y; if(y && typeof y.re==='number' && Math.abs(y.im)<1e-12) return y.re; return NaN; }catch(e){ return NaN; } };
+}
+function tanhSinh(f, a, b){
+  var c=(a+b)/2, d=(b-a)/2, prev=null, s0=0;
+  for(var h=1; h>=1/512; h/=2){
+    var sum=0, n=Math.ceil(3.2/h);
+    for(var k=-n;k<=n;k++){
+      var t=k*h, u=Math.PI/2*Math.sinh(t), ch=Math.cosh(u);
+      var w=Math.PI/2*Math.cosh(t)/(ch*ch), xx=c+d*Math.tanh(u);
+      if(xx<=a || xx>=b || w<1e-300) continue;
+      var fx=f(xx); if(isFinite(fx)) sum+=w*fx;
+    }
+    s0 = sum*h*d;
+    if(prev!==null && Math.abs(s0-prev) <= 1e-11*(1+Math.abs(s0))) return s0;
+    prev = s0;
+  }
+  return s0;
+}
+function numInt(fx, a, b){
+  if(a===b) return 0;
+  if(a>b) return -numInt(fx,b,a);
+  var f=fx, lo=a, hi=b;
+  if(!isFinite(a) && !isFinite(b)){ f=function(t){ var x=t/(1-t*t); return fx(x)*(1+t*t)/Math.pow(1-t*t,2); }; lo=-1; hi=1; }
+  else if(!isFinite(b)){ f=function(t){ return fx(a+t/(1-t))/Math.pow(1-t,2); }; lo=0; hi=1; }
+  else if(!isFinite(a)){ f=function(t){ return fx(b-(1-t)/t)/(t*t); }; lo=0; hi=1; }
+  var val = tanhSinh(f, lo, hi);
+  if(!isFinite(val)){ var e=new Error('La integral no converge'); e.friendly=true; throw e; }
+  return val;
+}
+function numRoots(g, a, b, n){
+  n = n || 8000;
+  var out=[], px=a, py=g(a);
+  for(var i=1;i<=n;i++){
+    var x=a+(b-a)*i/n, y=g(x);
+    if(isFinite(py) && isFinite(y)){
+      if(py===0) out.push(px);
+      else if(py*y<0){
+        var lo=px, hi=x, flo=py;
+        for(var k=0;k<90;k++){ var mid=(lo+hi)/2, fm=g(mid); if(!isFinite(fm)) break; if(flo*fm<=0) hi=mid; else { lo=mid; flo=fm; } }
+        var r=(lo+hi)/2, fr=g(r);
+        if(isFinite(fr) && Math.abs(fr) < 1e-7*(1+Math.abs(py)+Math.abs(y))) out.push(r);
+      }
+    }
+    px=x; py=y;
+  }
+  var ded=[]; out.sort(function(p,q){ return p-q; }).forEach(function(r){ if(!ded.length || Math.abs(r-ded[ded.length-1])>1e-9*(1+Math.abs(r))) ded.push(Math.abs(r)<1e-13?0:r); });
+  return ded;
+}
+
+/* ================= CAS en capas: Nerdamer → Algebrite → numérico ================= */
 function casPrep(s){ return prep(s).replace(/\bln\(/g,'log(').replace(/\*\*/g,'^'); }
+function splitArgs(s){
+  var out=[], d=0, cur='';
+  for(var i=0;i<s.length;i++){ var c=s[i]; if(c==='('||c==='[') d++; else if(c===')'||c===']') d--; if(c===',' && d===0){ out.push(cur.trim()); cur=''; } else cur+=c; }
+  if(cur.trim()!=='') out.push(cur.trim());
+  return out;
+}
+function topCall(e){
+  var m = e.match(/^([a-zA-Z]\w*)\((.*)\)$/); if(!m) return null;
+  var d=0; for(var i=m[1].length;i<e.length;i++){ if(e[i]==='(') d++; else if(e[i]===')'){ d--; if(d===0 && i<e.length-1) return null; } }
+  return { name:m[1], args:splitArgs(m[2]) };
+}
+function approxAny(r){
+  try{
+    var t = r.evaluate().text('decimals');
+    var v = math.evaluate(t.replace(/\*i\b/g,'*i'));
+    if(typeof v==='number') return isFinite(v) ? v : null;
+    if(math.isComplex(v)) return Math.abs(v.im) < 1e-12*Math.max(1,Math.abs(v.re)) ? v.re : v;
+    return null;
+  }catch(e){ return null; }
+}
+function approxTeX(a){ return typeof a==='number' ? texNum(a) : complexTeX(a); }
 function approxOf(r){
   try{
     if(r.variables && r.variables().length) return null;
@@ -501,14 +861,146 @@ function approxOf(r){
     return isFinite(d) ? d : null;
   }catch(e){ return null; }
 }
+function toAlg(s){ return s.replace(/\basin\(/g,'arcsin(').replace(/\bacos\(/g,'arccos(').replace(/\batan\(/g,'arctan(').replace(/\bsqrt\(/g,'sqrt('); }
+function fromAlg(s){ return String(s).replace(/\barcsin\(/g,'asin(').replace(/\barccos\(/g,'acos(').replace(/\barctan\(/g,'atan(').replace(/\.\.\./g,''); }
+function algebrite(cmd){
+  var r = String(Algebrite.run(cmd));
+  if(/^Stop|error|nil/i.test(r) || r==='') throw new Error('algebrite: '+r);
+  return fromAlg(r);
+}
+function evalAt(expr, v, x){ return Number(nerdamer(expr, (function(){ var o={}; o[v]=String(x); return o; })()).evaluate().text('decimals')); }
+function checkAntideriv(F, f, v){
+  try{
+    var gF = compileX(F, v), gf = compileX(f, v);
+    var pts=[0.3711, 0.6137, 1.2137, 2.5391, -0.4523, 4.1027], ok=0;
+    for(var i=0;i<pts.length;i++){
+      var x=pts[i], h=1e-5*Math.max(1,Math.abs(x));
+      var d=(gF(x+h)-gF(x-h))/(2*h), b=gf(x);
+      if(!isFinite(d) || !isFinite(b)) continue;
+      if(Math.abs(d-b) > 1e-4*(1+Math.abs(b))) return false;
+      ok++;
+    }
+    return true;
+  }catch(e){ return true; }
+}
+function casIntegrate(f, v){
+  var cands = [];
+  try{ var r1 = nerdamer('integrate('+f+','+v+')'); if(!/integrate\(/.test(r1.text()) && checkAntideriv(r1.text(), f, v)) cands.push(r1); }catch(e){}
+  try{ var r2 = nerdamer(algebrite('integral('+toAlg(f)+','+v+')')); if(checkAntideriv(r2.text(), f, v)) cands.push(r2); }catch(e){}
+  if(!cands.length){ var er = new Error('No encontré una primitiva en forma cerrada. Para un valor numérico usa la integral definida.'); er.friendly=true; throw er; }
+  cands.sort(function(a,b){ return nTeX(a).length - nTeX(b).length; });
+  return cands[0];
+}
+function casDefint(f, a, b, v){
+  var note = null, r = null, ap = null;
+  var infinite = /Infinity/.test(a+b);
+  if(!infinite){
+    try{ r = nerdamer('defint('+f+','+a+','+b+','+v+')'); if(/integrate|defint|\d{7,}/.test(r.toString())) r=null; else ap = approxOf(r); }catch(e){ r=null; }
+    if(r && ap===null) r = null;
+    if(!r){ try{ var t = algebrite('defint('+toAlg(f)+','+v+','+a+','+b+')'); r = nerdamer(t); ap = approxOf(r); if(ap===null || /\d{7,}/.test(r.toString())) r=null; }catch(e){ r=null; } }
+  }
+  var fx = compileX(f, v);
+  var A = Number(math.evaluate(prep(a))), B = Number(math.evaluate(prep(b)));
+  var num = numInt(fx, A, B);
+  if(r && ap!==null && Math.abs(ap-num) > 1e-5*(1+Math.abs(num))) r = null;
+  if(!r){ note = 'Valor numérico'; return { outTex: '\\approx '+texNum(num), ins: machine(num), note:note, num:num }; }
+  var e = { outTex: nTeX(r), ins: r.text(), num: ap };
+  if(!/^-?\d+$/.test(r.toString())) e.altTex = '\\approx '+texNum(ap);
+  return e;
+}
 function replayCas(){
   S.casDefs.forEach(function(d){
     try{ if(d.t==='f') nerdamer.setFunction(d.n, d.a, d.b); else nerdamer.setVar(d.n, d.b); }catch(e){}
   });
 }
-function evalCAS(expr){
-  var e = casPrep(expr).trim();
-  var inTex = mathjsTeX(expr) || texText(expr);
+function solveOne(q, range){
+  var sides = q.split('=');
+  var gExpr = '('+sides[0]+')-('+sides[1]+')';
+  var vars = nerdamer(gExpr).variables();
+  if(!vars.length){ var er=new Error('La ecuación no tiene incógnitas'); er.friendly=true; throw er; }
+  var v = vars.indexOf('x')>=0 ? 'x' : vars[0];
+  var exact = [], messy = false;
+  if(!range){
+    try{
+      var sols = nerdamer.solveEquations(q, v) || [];
+      sols.forEach(function(s){ var t=String(s); if(/\d{7,}/.test(t)) messy = true; exact.push(t); });
+    }catch(e){ exact = []; }
+  }
+  var gc = null; try{ gc = math.compile(prep(gExpr)); }catch(e){}
+  function residualOK(a){
+    if(a===null || !gc) return true;
+    try{ var sc = makeScope(true); sc[v]=a; var val = gc.evaluate(sc); var m = typeof val==='number' ? Math.abs(val) : math.abs(val);
+      return isFinite(m) && m < 1e-6*(1+math.abs(a)); }catch(e){ return true; }
+  }
+  function polish(z){
+    if(!gc) return z;
+    var sc = makeScope(true); var G = function(w){ sc[v]=w; return gc.evaluate(sc); };
+    try{
+      for(var k=0;k<30;k++){
+        var h = 1e-7*(1+math.abs(z));
+        var d = math.divide(math.subtract(G(math.add(z,h)), G(math.subtract(z,h))), 2*h);
+        if(!math.abs(d)) break;
+        var nz = math.subtract(z, math.divide(G(z), d));
+        var done = math.abs(math.subtract(nz,z)) < 1e-15*(1+math.abs(z));
+        z = nz; if(done) break;
+      }
+    }catch(e){}
+    if(math.isComplex(z) && Math.abs(z.im) < 1e-10*Math.max(1,Math.abs(z.re))) z = z.re;
+    return z;
+  }
+  if(exact.length && !messy){
+    var bad = exact.some(function(s){ return !residualOK(approxAny(nerdamer(s))); });
+    if(bad){ exact = []; messy = true; }
+  }
+  if(exact.length && !messy){
+    var rs = exact.map(function(s){ return nerdamer(s); });
+    var tex = rs.map(function(r){ return v+'='+nTeX(r); }).join(',\\quad ');
+    var ap = rs.map(approxAny);
+    var entry = { outTex: tex, ins: rs[0].text() };
+    var simple = rs.every(function(r){ return /^-?(\d+\*?)?i?$/.test(r.text()); });
+    if(!simple && ap.every(function(a){ return a!==null; })){
+      var apTex = ap.map(function(a){ return v+'\\approx '+approxTeX(a); }).join(',\\quad ');
+      if(tex.length > 170){ entry.exTex = tex; entry.showEx = false; entry.outTex = apTex; entry.note = 'La forma exacta es muy larga: pulsa S⇔D para verla'; }
+      else entry.altTex = apTex;
+    }
+    return entry;
+  }
+  // Numérico: primero raíces de polinomio (incluye complejas), luego búsqueda real
+  if(!range){
+    try{
+      var nr = String(Algebrite.run('nroots('+toAlg(gExpr)+','+v+')'));
+      if(/^\[/.test(nr) || /^-?[\d.]/.test(nr)){
+        var vals = nr.replace(/^\[|\]$/g,'').replace(/\.\.\./g,'').split(',').map(function(t){ return polish(math.evaluate(t.trim())); });
+        vals = vals.filter(function(z){ return residualOK(z); });
+        if(vals.length){
+          vals.sort(function(p,q){ var pi = typeof p==='number'?0:Math.abs(p.im), qi = typeof q==='number'?0:Math.abs(q.im); return pi-qi || (typeof p==='number'?p:p.re)-(typeof q==='number'?q:q.re); });
+          var re0 = vals.filter(function(z){ return typeof z==='number' || Math.abs(z.im)<1e-10; })[0];
+          return { outTex: vals.map(function(z){ return v+'\\approx '+approxTeX(typeof z!=='number' && Math.abs(z.im)<1e-10 ? z.re : z); }).join(',\\quad '),
+            ins: re0!==undefined ? machine(typeof re0==='number'?re0:re0.re) : '', num: re0!==undefined ? (typeof re0==='number'?re0:re0.re) : undefined,
+            note: 'Solución numérica (raíces del polinomio)' };
+        }
+      }
+    }catch(e){}
+  }
+  var a = range ? range[0] : -100, b = range ? range[1] : 100;
+  var g = compileX(gExpr, v);
+  var roots = numRoots(g, a, b, range ? 8000 : 20000);
+  if(!roots.length){
+    var er2 = new Error('No encontré soluciones reales entre '+fmtNum(a)+' y '+fmtNum(b)+'. Prueba otro intervalo: nsolve(ecuación, '+v+', a, b).'); er2.friendly=true; throw er2;
+  }
+  var total = roots.length;
+  if(!range) roots.sort(function(p,q2){ return Math.abs(p)-Math.abs(q2); });
+  roots = roots.slice(0,8).sort(function(p,q2){ return p-q2; });
+  return { outTex: roots.map(function(r){ return v+'\\approx '+texNum(r); }).join(',\\quad '),
+    ins: machine(roots[0]), num: roots[0],
+    note: 'Solución numérica en ['+fmtNum(a)+'; '+fmtNum(b)+']' + (total>8 ? ' · se muestran 8 de '+total : '') };
+}
+function fixDefLhs(e){ return e.replace(/^([a-zA-Z]\w*)\*\(([^()]*)\)\s*(:?=)/, '$1($2)$3'); }
+var CAS_CMDS = {integrate:1, defint:1, nint:1, solve:1, nsolve:1, taylor:1, limit:1};
+function evalCAS(src){
+  var e = fixDefLhs(casPrep(src).trim());
+  var call0 = topCall(e);
+  if(call0 && CAS_CMDS[call0.name]) return casCommand(call0, e);
   if(e.indexOf(':=')>0){
     var parts = e.split(':='), lhs = parts[0].trim(), rhs = parts[1].trim();
     var fm = lhs.match(/^([a-zA-Z]\w*)\s*\(([^)]*)\)$/);
@@ -516,82 +1008,105 @@ function evalCAS(expr){
       var args = fm[2].split(',').map(function(s){ return s.trim(); });
       nerdamer.setFunction(fm[1], args, rhs);
       S.casDefs = S.casDefs.filter(function(d){ return d.n!==fm[1]; }).concat([{t:'f',n:fm[1],a:args,b:rhs}]);
-      return { inTex:inTex, outTex: fm[1]+'('+args.join(',')+')='+nTeX(nerdamer(rhs)), ins:fm[1]+'(' };
+      return { outTex: fm[1]+'('+args.join(',')+')='+nTeX(nerdamer(rhs)), ins:fm[1]+'(' };
     }
     nerdamer.setVar(lhs, rhs);
     S.casDefs = S.casDefs.filter(function(d){ return d.n!==lhs; }).concat([{t:'v',n:lhs,b:rhs}]);
-    return { inTex:inTex, outTex: lhs+'='+nTeX(nerdamer(rhs)), ins:lhs };
+    return { outTex: lhs+'='+nTeX(nerdamer(rhs)), ins:lhs };
   }
   var eqs = e.split(/[;\n]/).map(function(s){ return s.trim(); }).filter(Boolean);
   var isEq = eqs.length && eqs.every(function(q){ return /^[^=]+=[^=]+$/.test(q); });
   if(isEq){
     if(eqs.length>1){
       var sol = nerdamer.solveEquations(eqs.slice());
-      if(!sol || !sol.length) return { inTex:inTex, outTex:texText('No se encontró solución'), ins:'' };
-      return { inTex: '\\begin{cases}'+eqs.map(function(q){ return mathjsTeX(q)||texText(q); }).join('\\\\')+'\\end{cases}',
-        outTex: sol.map(function(p){ return p[0]+'='+nTeX(nerdamer(String(p[1]))); }).join(',\\quad '),
+      if(!sol || !sol.length){ var ne = new Error('No se encontró solución para el sistema'); ne.friendly=true; throw ne; }
+      return { outTex: sol.map(function(p){ return p[0]+'='+nTeX(nerdamer(String(p[1]))); }).join(',\\quad '),
         ins: sol.map(function(p){ return machine(Number(nerdamer(String(p[1])).evaluate().text('decimals'))); }).join(',') };
     }
-    var q = eqs[0], sides = q.split('=');
-    var vars = nerdamer('('+sides[0]+')-('+sides[1]+')').variables();
-    if(!vars.length) throw new Error('La ecuación no tiene incógnitas');
-    var v = vars.indexOf('x')>=0 ? 'x' : vars[0];
-    var sols = nerdamer.solveEquations(q, v) || [];
-    if(!sols.length) return { inTex:inTex, outTex:texText('No se encontró solución'), ins:'' };
-    var rs = sols.map(function(s){ return nerdamer(String(s)); });
-    var outTex = rs.map(function(r){ return v+'='+nTeX(r); }).join(',\\quad ');
-    var ap = rs.map(approxOf);
-    var entry = { inTex:inTex, outTex:outTex, ins: String(rs[0]) };
-    var exactSimple = rs.every(function(r){ return /^-?\d+$/.test(r.text()); });
-    if(!exactSimple && ap.every(function(a){ return a!==null; })){
-      entry.altTex = ap.map(function(a){ return v+'\\approx '+texNum(a); }).join(',\\quad ');
-    }
-    return entry;
+    return solveOne(eqs[0]);
   }
   var r = nerdamer(e);
-  var ent = { inTex:inTex, outTex:nTeX(r), ins:r.text() };
-  var a = approxOf(r);
-  if(a!==null && !/^-?\d+$/.test(r.text())) ent.altTex = '\\approx '+texNum(a);
-  if(a!==null) ansVal = a;
+  var ent = { outTex:nTeX(r), ins:r.text() };
+  if(/integrate\(/.test(r.text())){ var ie = new Error('No encontré una primitiva en forma cerrada. Para un valor numérico usa la integral definida.'); ie.friendly=true; throw ie; }
+  var a2 = approxOf(r);
+  if(a2!==null && !/^-?\d+$/.test(r.text())) ent.altTex = '\\approx '+texNum(a2);
+  if(a2!==null) ansVal = a2;
   return ent;
 }
+function casCommand(call, e){
+    var A = call.args;
+    switch(call.name){
+      case 'integrate': {
+        var r1 = casIntegrate(A[0], A[1]||'x');
+        return { outTex: nTeX(r1) + '+C', ins: r1.text() };
+      }
+      case 'defint': return casDefint(A[0], A[1], A[2], A[3]||'x');
+      case 'nint': {
+        var val = numInt(compileX(A[0], A[3]||'x'), Number(math.evaluate(prep(A[1]))), Number(math.evaluate(prep(A[2]))));
+        return { outTex: '\\approx '+texNum(val), ins: machine(val), num: val, note:'Valor numérico' };
+      }
+      case 'solve': {
+        if(A.length>=1 && A[0].indexOf('=')<0) return solveOne(A[0]+'=0');
+        return solveOne(A[0]);
+      }
+      case 'nsolve': {
+        var q = A[0].indexOf('=')>=0 ? A[0] : A[0]+'=0';
+        var lo = A.length>=4 ? Number(math.evaluate(prep(A[2]))) : -100, hi = A.length>=4 ? Number(math.evaluate(prep(A[3]))) : 100;
+        return solveOne(q, [lo, hi]);
+      }
+      case 'taylor': {
+        var tt = algebrite('taylor('+toAlg(A[0])+','+(A[1]||'x')+','+(A[2]||'5')+','+(A[3]||'0')+')');
+        var tr = nerdamer(tt);
+        return { outTex: nTeX(tr), ins: tr.text() };
+      }
+      case 'limit': {
+        var lr = nerdamer(e);
+        if(/limit\(/.test(lr.text())){ var le = new Error('No pude calcular ese límite de forma exacta'); le.friendly=true; throw le; }
+        var la = approxOf(lr);
+        var le2 = { outTex: nTeX(lr), ins: lr.text() };
+        if(la!==null && !/^-?\d+$/.test(lr.text())) le2.altTex = '\\approx '+texNum(la);
+        return le2;
+      }
+    }
+}
 
-/* ---------- Errores ---------- */
+/* ================= Errores ================= */
 function friendly(err){
+  if(err && err.friendly) return err.message;
   var m = String(err && err.message || err);
   var rules = [
-    [/Undefined symbol (\w+)/, function(x){ return 'Símbolo no definido: '+x[1]; }],
-    [/Undefined function (\w+)/, function(x){ return 'Función no definida: '+x[1]; }],
+    [/Undefined symbol (\w+)/, function(x){ return x[1]==='x' || x[1]==='y' ? 'La variable '+x[1]+' no tiene valor. Para trabajar con x usa el modo CAS o asígnale un valor: '+x[1]+' = 2' : 'Símbolo no definido: '+x[1]; }],
+    [/Undefined function (\w+)/, function(x){ return 'Función no definida: '+x[1]+'. Si querías multiplicar, usa ×.'; }],
     [/Unexpected end of expression/, function(){ return 'Expresión incompleta'; }],
     [/Parenthesis \) expected/, function(){ return 'Falta cerrar un paréntesis'; }],
     [/Unexpected operator/, function(){ return 'Operador fuera de lugar'; }],
     [/Value expected/, function(){ return 'Falta un valor'; }],
-    [/Dimension mismatch|Dimensions mismatch/, function(){ return 'Las dimensiones no coinciden'; }],
-    [/Units do not match/, function(){ return 'Las unidades no son compatibles'; }],
-    [/Unit .* not found/, function(){ return 'Unidad no reconocida'; }],
+    [/Dimension mismatch|Dimensions mismatch/, function(){ return 'Las dimensiones de las matrices no coinciden'; }],
+    [/Units do not match/, function(){ return 'Las unidades no son compatibles entre sí'; }],
+    [/Unit .* not found/, function(){ return 'Unidad no reconocida. Revisa el Catálogo → Unidades.'; }],
     [/Division by zero/i, function(){ return 'División entre cero'; }],
     [/Too many arguments|Too few arguments/, function(){ return 'Número de argumentos incorrecto'; }],
     [/not a valid variable name/, function(){ return 'Nombre de variable no válido'; }],
     [/Matrix must be square|singular/i, function(){ return 'La matriz no es invertible o no es cuadrada'; }]
   ];
   for(var i=0;i<rules.length;i++){ var mm = m.match(rules[i][0]); if(mm) return rules[i][1](mm); }
-  return 'Error: ' + m;
+  return 'No pude interpretar la expresión (' + m + ')';
 }
 
-/* ---------- Historial ---------- */
+/* ================= Historial ================= */
 var hist = $('#hist');
 function entryEl(en, idx){
   var d = document.createElement('div'); d.className='entry'; d.dataset.idx=idx;
   var i = document.createElement('div'); i.className='in'; i.dataset.act='in'; d.appendChild(i);
-  renderTeX(i, en.inTex || texText(en.input), true);
+  renderTeX(i, en.inTex || texText(en.input));
   if(en.error){
     var er = document.createElement('div'); er.className='err'; er.textContent = en.error; d.appendChild(er);
   }else{
     var o = document.createElement('div'); o.className='out'; o.dataset.act='out'; d.appendChild(o);
-    var mainTex = (en.exTex && en.showEx) ? en.exTex : en.outTex;
-    renderTeX(o, mainTex, true);
-    var altTex = en.altTex || (en.exTex ? (en.showEx ? '\\approx '+en.outTex : '='+en.exTex) : null);
-    if(altTex){ var a = document.createElement('div'); a.className='alt'; d.appendChild(a); renderTeX(a, altTex, true); }
+    renderTeX(o, (en.exTex && en.showEx) ? en.exTex : en.outTex);
+    var altTex = en.altTex || (en.exTex && !en.note ? (en.showEx ? '\\approx '+en.outTex : '='+en.exTex) : null);
+    if(altTex){ var a = document.createElement('div'); a.className='alt'; d.appendChild(a); renderTeX(a, altTex); }
+    if(en.note){ var n = document.createElement('div'); n.className='note'; n.textContent = en.note; d.appendChild(n); }
   }
   return d;
 }
@@ -601,118 +1116,191 @@ function renderHistory(){
   if(!list.length){
     var em = document.createElement('div'); em.className='empty';
     em.textContent = S.mode==='cas'
-      ? 'Escribe una expresión con x o usa los atajos: derivar, integrar, resolver, factorizar.'
+      ? 'Trabaja con x de forma simbólica: derivar, integrar, resolver, factorizar. Los atajos están sobre el teclado.'
       : 'Escribe una operación y pulsa EXE. Toca un resultado para reutilizarlo.';
+    var b = document.createElement('button'); b.textContent = 'Abrir el manual';
+    b.onclick = function(){ openManual(S.mode==='cas' ? 'cas' : 'inicio'); };
+    em.appendChild(document.createElement('br')); em.appendChild(b);
     hist.appendChild(em); return;
   }
   var start = Math.max(0, list.length-40);
-  for(var k=start;k<list.length;k++){ hist.appendChild(entryEl(list[k], S.history.indexOf(list[k]))); }
-  mjq.then(function(){ hist.scrollTop = hist.scrollHeight; });
+  for(var k=start;k<list.length;k++) hist.appendChild(entryEl(list[k], S.history.indexOf(list[k])));
+  hist.scrollTop = hist.scrollHeight;
 }
 function pushHistory(en){
   S.history.push(en);
   if(S.history.length>120) S.history = S.history.slice(-120);
   var em = hist.querySelector('.empty'); if(em) em.remove();
   hist.appendChild(entryEl(en, S.history.length-1));
-  mjq.then(function(){ hist.scrollTop = hist.scrollHeight; });
+  hist.scrollTop = hist.scrollHeight;
   save();
 }
+function lastEntry(){ var l = S.history.filter(function(h){ return h.mode===S.mode && !h.error; }); return l[l.length-1]; }
 hist.addEventListener('click', function(ev){
   var t = ev.target.closest('[data-act]'); if(!t) return;
   var en = S.history[+t.closest('.entry').dataset.idx]; if(!en) return;
-  if(t.dataset.act==='in') insertText(en.input);
-  else if(en.ins) insertText(S.mode==='calc' && typeof ansVal!=='undefined' && en===lastEntry() ? 'Ans' : en.ins);
+  if(t.dataset.act==='in'){
+    if(natural()){ if(en.latex) mfInsert(en.latex); else mfInsert(mathjsTeX(en.input) || en.input); }
+    else insertText(en.input);
+  }else if(en.ins){
+    var txt = (S.mode==='calc' && en===lastEntry()) ? 'Ans' : en.ins;
+    if(natural()) mfInsert(txt==='Ans' ? '\\mathrm{Ans}' : (mathjsTeX(txt) || txt));
+    else insertText(txt);
+  }
 });
-function lastEntry(){ var l = S.history.filter(function(h){ return h.mode===S.mode && !h.error; }); return l[l.length-1]; }
 
-/* ---------- Entrada ---------- */
-var expr = $('#expr'), preview = $('#preview');
-var activeInput = expr;
+/* ================= Entrada ================= */
+var mf = $('#mf'), expr = $('#expr'), preview = $('#preview');
+var activeInput = null; // null = campo principal; o un <input> de función
+var isTouch = matchMedia('(pointer:coarse)').matches;
+function natural(){ return S.input==='natural' && activeInput===null && S.mode!=='graph'; }
+
+MathfieldElement.fontsDirectory = null;
+MathfieldElement.soundsDirectory = null;
+function setupMathfield(){
+  mf.mathVirtualKeyboardPolicy = 'manual';
+  mf.smartFence = true;
+  try{ mf.popoverPolicy = 'off'; }catch(e){}
+  try{ mf.menuItems = []; }catch(e){}
+  try{ mf.inlineShortcuts = Object.assign({}, mf.inlineShortcuts, {'Ans':'\\mathrm{Ans}'}); }catch(e){}
+  setMfInputMode('none');
+  mf.addEventListener('keydown', function(e){
+    if(e.key==='Enter'){ e.preventDefault(); e.stopPropagation(); action('exe'); }
+    else if(e.key==='Escape'){ e.preventDefault(); action('ac'); }
+  }, true);
+  mf.addEventListener('focus', function(){ activeInput = null; });
+}
+function setMfInputMode(m){
+  try{ var sk = mf.shadowRoot && mf.shadowRoot.querySelector('.ML__keyboard-sink, textarea, [contenteditable]'); if(sk) sk.setAttribute('inputmode', m); }catch(e){}
+}
+function mfFocus(){ if(document.activeElement!==mf) try{ mf.focus({preventScroll:true}); }catch(e){ mf.focus(); } }
+var intStage = 0; // recorrido de la integral definida: inferior → superior → función
+function mfInsert(latex){
+  mfFocus();
+  if(/^\\int_\{#\?\}\^\{#\?\}/.test(latex)){
+    mf.executeCommand(['insert', latex, {format:'latex', selectionMode:'placeholder'}]);
+    mf.executeCommand('moveToNextPlaceholder'); intStage = 1; return;
+  }
+  if(latex.indexOf('#')<0 && /^[0-9a-zA-Z.+\-=,;!()]$/.test(latex)) mf.executeCommand(['typedText', latex]);
+  else mf.executeCommand(['insert', latex, {format:'latex', selectionMode:'placeholder'}]);
+}
+function mfCmd(c){ mfFocus(); mf.executeCommand(c); }
+
 var pvTimer = null;
 function onInputChange(){
-  if(activeInput!==expr){ scheduleGraph(); return; }
+  if(activeInput){ scheduleGraph(); return; }
+  if(S.input==='natural') return;
   clearTimeout(pvTimer);
   pvTimer = setTimeout(function(){
     var v = expr.value.trim();
     if(!v){ preview.innerHTML=''; preview.classList.remove('bad'); return; }
     var t = mathjsTeX(v);
     preview.classList.toggle('bad', !t);
-    renderTeX(preview, t || texText(v), true);
-  }, 140);
+    renderTeX(preview, t || texText(v));
+  }, 120);
 }
 expr.addEventListener('input', onInputChange);
 expr.addEventListener('keydown', function(e){
   if(e.key==='Enter'){ e.preventDefault(); action('exe'); }
   else if(e.key==='Escape'){ e.preventDefault(); action('ac'); }
 });
-expr.addEventListener('focus', function(){ activeInput = expr; });
+expr.addEventListener('focus', function(){ activeInput = null; });
 
+function curInput(){ return activeInput || expr; }
 function insertText(txt){
-  if(S.mode==='graph' && activeInput===expr){ var gi=document.querySelectorAll('.frow input')[S.gsel]; if(gi) activeInput=gi; }
-  var el = activeInput;
+  if(S.mode==='graph' && !activeInput){ var gi=document.querySelectorAll('.frow input')[S.gsel]; if(gi) activeInput=gi; }
+  var el = curInput();
   var a = el.selectionStart!=null ? el.selectionStart : el.value.length;
   var b = el.selectionEnd!=null ? el.selectionEnd : a;
   var cur = txt.indexOf('§');
-  var clean = txt.replace('§','');
+  var clean = txt.replace(/§/g,'');
   el.value = el.value.slice(0,a) + clean + el.value.slice(b);
   var pos = a + (cur>=0 ? cur : clean.length);
   try{ el.setSelectionRange(pos,pos); }catch(e){}
   if(document.activeElement!==el && !isTouch) el.focus({preventScroll:true});
+  if(el.dataset && el.dataset.i!==undefined){ S.funcs[+el.dataset.i].e = el.value; }
   onInputChange();
 }
-var isTouch = matchMedia('(pointer:coarse)').matches;
-
 function smartDelete(){
-  var el = activeInput;
+  var el = curInput();
   var a = el.selectionStart!=null ? el.selectionStart : el.value.length, b = el.selectionEnd!=null ? el.selectionEnd : a;
   if(a!==b){ el.value = el.value.slice(0,a)+el.value.slice(b); el.setSelectionRange(a,a); onInputChange(); return; }
   if(a===0) return;
-  var before = el.value.slice(0,a);
-  var m = before.match(/(?:[a-zA-Z][a-zA-Z0-9]*\(|Ans|pi| to | mod |\*10\^\()$/);
+  var m = el.value.slice(0,a).match(/(?:[a-zA-Z][a-zA-Z0-9]*\(|Ans|pi| to | mod |\*10\^\()$/);
   var n = m ? m[0].length : 1;
   el.value = el.value.slice(0,a-n) + el.value.slice(a);
   el.setSelectionRange(a-n,a-n);
+  if(el.dataset && el.dataset.i!==undefined){ S.funcs[+el.dataset.i].e = el.value; }
   onInputChange();
 }
 function moveCaret(d){
-  var el = activeInput;
-  if(d<0 && !el.value && activeInput===expr){
-    var l = S.history.filter(function(h){ return h.mode===S.mode; });
-    if(l.length){ el.value = l[l.length-1].input; el.setSelectionRange(el.value.length, el.value.length); onInputChange(); }
+  if(natural()){
+    if(d<0 && mf.value==='' ){ recallLast(); return; }
+    if(d===1 && intStage===1){ mfCmd('moveToPreviousPlaceholder'); intStage = 2; return; }
+    if(d===1 && intStage===2){ mfCmd('moveToNextPlaceholder'); intStage = 0; return; }
+    intStage = 0;
+    mfCmd(d===-999 ? 'moveToMathfieldStart' : d===999 ? 'moveToMathfieldEnd' : d<0 ? 'moveToPreviousChar' : 'moveToNextChar');
     return;
   }
+  var el = curInput();
+  if(d<0 && !el.value && !activeInput){ recallLast(); return; }
   var p = (el.selectionStart!=null ? el.selectionStart : el.value.length) + d;
   if(d===-999) p=0; if(d===999) p=el.value.length;
   p = Math.max(0, Math.min(el.value.length, p));
   el.setSelectionRange(p,p);
 }
+function recallLast(){
+  var l = S.history.filter(function(h){ return h.mode===S.mode; });
+  if(!l.length) return;
+  var en = l[l.length-1];
+  if(S.input==='natural'){ mf.value = en.latex || mathjsTeX(en.input) || ''; mfCmd('moveToMathfieldEnd'); }
+  else { expr.value = en.input; expr.setSelectionRange(expr.value.length, expr.value.length); onInputChange(); }
+}
+function clearInput(){
+  intStage = 0;
+  if(natural()){ mf.value=''; mfFocus(); return; }
+  var el = curInput(); el.value=''; if(el.dataset && el.dataset.i!==undefined) S.funcs[+el.dataset.i].e=''; onInputChange();
+}
 
-/* ---------- Acciones ---------- */
-function exe(forceDec){
-  if(S.mode==='graph'){ drawGraph(); if(document.activeElement) document.activeElement.blur(); return; }
-  var src = expr.value.trim(); if(!src) return;
-  var en;
+/* ================= Acciones ================= */
+function readSource(){
+  if(S.input==='natural'){
+    var latex = mf.value.trim();
+    if(!latex) return null;
+    return { latex: latex, lin: latexToExpr(latex) };
+  }
+  var v = expr.value.trim(); if(!v) return null;
+  return { latex: null, lin: prep(v) };
+}
+function exe(forceDec, given){
+  intStage = 0;
+  if(S.mode==='graph'){ drawGraph(); if(document.activeElement && document.activeElement.blur) document.activeElement.blur(); return; }
+  var src;
+  try{ src = given || readSource(); }
+  catch(err){ pushHistory({ input:'', latex: mf.value, mode:S.mode, inTex: mf.value, error: friendly(err) }); return; }
+  if(!src) return;
+  var inTex = src.latex || mathjsTeX(src.lin) || texText(src.lin);
   try{
-    en = S.mode==='cas' ? evalCAS(src) : evalCalc(src, forceDec);
-    en.input = src; en.mode = S.mode;
+    var en = S.mode==='cas' ? evalCAS(src.lin) : evalCalc(src.lin, forceDec);
+    en.input = src.lin; en.latex = src.latex; en.inTex = inTex; en.mode = S.mode;
+    if(S.mode==='cas' && typeof en.num==='number') ansVal = en.num;
     pushHistory(en);
-    expr.value=''; onInputChange();
+    if(!given){ if(S.input==='natural'){ mf.value=''; } else { expr.value=''; onInputChange(); } }
   }catch(err){
-    pushHistory({ input:src, mode:S.mode, inTex: mathjsTeX(src) || texText(src), error: friendly(err) });
+    pushHistory({ input:src.lin, latex:src.latex, mode:S.mode, inTex: inTex, error: friendly(err) });
   }
 }
 function toggleSD(){
   var en = lastEntry();
-  S.exact = !S.exact; updateStatus();
-  if(en && en.exTex){ en.showEx = !en.showEx; renderHistory(); }
-  save();
+  if(en && en.exTex){ en.showEx = !en.showEx; renderHistory(); save(); return; }
+  S.exact = !S.exact; updateStatus(); save();
 }
 function action(a){
   switch(a){
     case 'exe': exe(false); break;
     case 'approx': exe(true); break;
-    case 'del': smartDelete(); break;
-    case 'ac': activeInput.value=''; onInputChange(); break;
+    case 'del': if(natural()) mfCmd('deleteBackward'); else smartDelete(); break;
+    case 'ac': clearInput(); break;
     case 'left': moveCaret(-1); break;
     case 'right': moveCaret(1); break;
     case 'home': moveCaret(-999); break;
@@ -721,52 +1309,141 @@ function action(a){
   }
 }
 
-/* ---------- Teclado ---------- */
+/* ================= Teclado ================= */
+/* m: etiqueta · s: etiqueta SHIFT · v/sv: texto lineal · n/sn: plantilla natural (LaTeX) · a/sa: acción · d/sd: descripción */
+var FRAC = '<span class="frac"><i></i><b></b><i></i></span>';
 var KEYS = [
-  [{m:'SHIFT',a:'shift',c:'shiftk'},{m:'◀',a:'left',s:'⇤',sa:'home',c:'fnk'},{m:'▶',a:'right',s:'⇥',sa:'end',c:'fnk'},{m:'S⇔D',a:'sd',s:'',c:'fnk'},{m:'DEL',a:'del',s:'AC',sa:'ac',c:'danger'}],
-  [{m:'x',v:'x',s:'y',sv:'y'},{m:'sin',v:'sin(',s:'sin⁻¹',sv:'asin('},{m:'cos',v:'cos(',s:'cos⁻¹',sv:'acos('},{m:'tan',v:'tan(',s:'tan⁻¹',sv:'atan('},{m:'x<sup>y</sup>',v:'^',s:'x⁻¹',sv:'^(-1)'}],
-  [{m:'√',v:'sqrt(',s:'ⁿ√',sv:'nthRoot(§,)'},{m:'x²',v:'^2',s:'x³',sv:'^3'},{m:'ln',v:'ln(',s:'eˣ',sv:'e^('},{m:'log',v:'log10(',s:'10ˣ',sv:'10^('},{m:'(',v:'(',s:'|x|',sv:'abs('}],
-  [{m:'7',v:'7',s:'[',sv:'[',c:'num'},{m:'8',v:'8',s:']',sv:']',c:'num'},{m:'9',v:'9',s:';',sv:';',c:'num'},{m:'÷',v:'/',s:'mod',sv:' mod ',c:'op'},{m:')',v:')',s:'x!',sv:'!'}],
-  [{m:'4',v:'4',s:'%',sv:'/100',c:'num'},{m:'5',v:'5',s:'°',sv:' deg',c:'num'},{m:'6',v:'6',s:'Σ',sv:'sum(§,k,1,10)',c:'num'},{m:'×',v:'*',s:'nCr',sv:'nCr(§,)',c:'op'},{m:',',v:',',s:'=',sv:'='}],
-  [{m:'1',v:'1',s:'to',sv:' to ',c:'num'},{m:'2',v:'2',s:':=',sv:':=',c:'num'},{m:'3',v:'3',s:'∞',sv:'Infinity',c:'num'},{m:'−',v:'-',s:'nPr',sv:'nPr(§,)',c:'op'},{m:'π',v:'pi',s:'e',sv:'e'}],
-  [{m:'0',v:'0',s:'Ran',sv:'random()',c:'num'},{m:'.',v:'.',s:'i',sv:'i',c:'num'},{m:'×10<sup>x</sup>',v:'*10^(',s:'f(x)=',sv:'f(x)='},{m:'+',v:'+',s:'Ans',sv:'Ans',c:'op'},{m:'EXE',a:'exe',s:'≈',sa:'approx',c:'exe'}]
+  [{m:'SHIFT',a:'shift',c:'shiftk',d:'Activa la segunda función (en amarillo) de la próxima tecla.'},
+   {m:'◀',a:'left',s:'⇤',sa:'home',c:'fnk',d:'Mueve el cursor a la izquierda. Con la línea vacía recupera la última expresión.',sd:'Va al inicio de la expresión.'},
+   {m:'▶',a:'right',s:'⇥',sa:'end',c:'fnk',d:'Mueve el cursor a la derecha (también entra y sale de fracciones y raíces).',sd:'Va al final de la expresión.'},
+   {m:'S⇔D',a:'sd',c:'fnk',d:'Alterna el último resultado entre forma exacta (fracciones, raíces, π) y decimal.'},
+   {m:'DEL',a:'del',s:'AC',sa:'ac',c:'danger',d:'Borra lo que está a la izquierda del cursor.',sd:'Borra toda la línea.'}],
+  [{m:'x',v:'x',s:'y',sv:'y',d:'Variable x (CAS y gráficas).',sd:'Variable y.'},
+   {m:'sin',v:'sin(',n:'\\sin\\left(#?\\right)',s:'sin⁻¹',sv:'asin(',sn:'\\arcsin\\left(#?\\right)',d:'Seno.',sd:'Arcoseno.'},
+   {m:'cos',v:'cos(',n:'\\cos\\left(#?\\right)',s:'cos⁻¹',sv:'acos(',sn:'\\arccos\\left(#?\\right)',d:'Coseno.',sd:'Arcocoseno.'},
+   {m:'tan',v:'tan(',n:'\\tan\\left(#?\\right)',s:'tan⁻¹',sv:'atan(',sn:'\\arctan\\left(#?\\right)',d:'Tangente.',sd:'Arcotangente.'},
+   {m:'x<sup>▫</sup>',v:'^',n:'#@^{#?}',s:'x⁻¹',sv:'^(-1)',sn:'#@^{-1}',d:'Potencia: eleva lo anterior al exponente que escribas.',sd:'Inverso (elevar a −1).'}],
+  [{m:'√',v:'sqrt(',n:'\\sqrt{#?}',s:'ⁿ√',sv:'nthRoot(§,)',sn:'\\sqrt[#?]{#?}',d:'Raíz cuadrada.',sd:'Raíz n-ésima.'},
+   {m:'x²',v:'^2',n:'#@^{2}',s:'x³',sv:'^3',sn:'#@^{3}',d:'Al cuadrado.',sd:'Al cubo.'},
+   {m:'ln',v:'ln(',n:'\\ln\\left(#?\\right)',s:'eˣ',sv:'e^(',sn:'e^{#?}',d:'Logaritmo natural (base e).',sd:'Exponencial eˣ.'},
+   {m:'log',v:'log10(',n:'\\log\\left(#?\\right)',s:'10ˣ',sv:'10^(',sn:'10^{#?}',d:'Logaritmo en base 10.',sd:'Potencia de 10.'},
+   {m:'(',v:'(',s:'|x|',sv:'abs(',sn:'\\left|#?\\right|',d:'Abre paréntesis.',sd:'Valor absoluto.'}],
+  [{m:'7',v:'7',s:'[ ]',sv:'[',sn:'\\begin{pmatrix}#?&#?\\\\#?&#?\\end{pmatrix}',c:'num',d:'Siete.',sd:'Matriz 2×2 (en escritura lineal abre corchete).'},
+   {m:'8',v:'8',s:']',sv:']',sn:'\\begin{pmatrix}#?&#?&#?\\\\#?&#?&#?\\\\#?&#?&#?\\end{pmatrix}',c:'num',d:'Ocho.',sd:'Matriz 3×3 (en escritura lineal cierra corchete).'},
+   {m:'9',v:'9',s:';',sv:';',c:'num',d:'Nueve.',sd:'Punto y coma: separa filas de una matriz o ecuaciones de un sistema.'},
+   {m:'÷',v:'/',n:'\\div',s:'mod',sv:' mod ',sn:'\\operatorname{mod}',c:'op',d:'División.',sd:'Resto de la división (módulo).'},
+   {m:')',v:')',s:'x!',sv:'!',d:'Cierra paréntesis.',sd:'Factorial.'}],
+  [{m:'4',v:'4',s:'%',sv:'/100',sn:'\\%',c:'num',d:'Cuatro.',sd:'Porcentaje (divide entre 100).'},
+   {m:'5',v:'5',s:'°',sv:' deg',sn:'\\degree',c:'num',d:'Cinco.',sd:'Grados sexagesimales, sin importar el modo de ángulo.'},
+   {m:'6',v:'6',s:'Σ',sv:'sum(§,k,1,10)',sn:'\\sum_{k=1}^{#?}#?',c:'num',d:'Seis.',sd:'Sumatoria.'},
+   {m:'×',v:'*',n:'\\times',s:'nCr',sv:'nCr(§,)',sn:'\\operatorname{nCr}\\left(#?,#?\\right)',c:'op',d:'Multiplicación.',sd:'Combinaciones de n en r.'},
+   {m:',',v:',',s:'=',sv:'=',d:'Coma: separa los argumentos de una función.',sd:'Igual: ecuaciones en CAS y asignaciones en Cálculo.'}],
+  [{m:'1',v:'1',s:'to',sv:' to ',sn:'\\operatorname{to}',c:'num',d:'Uno.',sd:'Convertir unidades: 10 km to mi.'},
+   {m:'2',v:'2',s:':=',sv:':=',sn:'\\coloneq',c:'num',d:'Dos.',sd:'Definir en CAS: a := 3 o f(x) := x².'},
+   {m:'3',v:'3',s:'∞',sv:'Infinity',sn:'\\infty',c:'num',d:'Tres.',sd:'Infinito (límites e integrales impropias).'},
+   {m:'−',v:'-',s:'nPr',sv:'nPr(§,)',sn:'\\operatorname{nPr}\\left(#?,#?\\right)',c:'op',d:'Resta o signo negativo.',sd:'Permutaciones de n en r.'},
+   {m:'π',v:'pi',n:'\\pi',s:'e',sv:'e',d:'Número π.',sd:'Número e.'}],
+  [{m:'0',v:'0',s:'Ran',sv:'random()',sn:'\\operatorname{random}\\left(\\right)',c:'num',d:'Cero.',sd:'Número aleatorio entre 0 y 1.'},
+   {m:'.',v:'.',s:'i',sv:'i',c:'num',d:'Punto decimal.',sd:'Unidad imaginaria i.'},
+   {m:FRAC,v:'/',n:'\\frac{#@}{#?}',s:'×10ˣ',sv:'*10^(',sn:'\\times10^{#?}',d:'Fracción. Lo que está antes del cursor pasa al numerador.',sd:'Notación científica.'},
+   {m:'+',v:'+',s:'Ans',sv:'Ans',sn:'\\mathrm{Ans}',c:'op',d:'Suma.',sd:'Último resultado.'},
+   {m:'EXE',a:'exe',s:'≈',sa:'approx',c:'exe',d:'Calcula.',sd:'Calcula y muestra el resultado en decimal.'}]
 ];
 var pad = $('#pad');
 var shift = false;
 function setShift(on){ shift = on; document.body.classList.toggle('shift', on); }
+function pressKey(k){
+  if(k.a==='shift'){ setShift(!shift); return; }
+  var useS = shift && (k.sv!==undefined || k.sa);
+  setShift(false);
+  if(useS && k.sa){ action(k.sa); return; }
+  if(!useS && k.a){ action(k.a); return; }
+  var lin = useS ? k.sv : k.v, nat = useS ? (k.sn || null) : (k.n || null);
+  if(natural()){
+    if(nat) mfInsert(nat);
+    else if(lin==='[' || lin===']'){ mfInsert(nat || lin); }
+    else mfInsert(lin.replace(/§/g,'').trim() === lin.trim() && lin.length<=2 ? lin : linToLatexTemplate(lin));
+  }else insertText(lin);
+}
+var toastT = null;
+function toast(title, body){
+  var t = $('#toast'); t.innerHTML = ''; var b = document.createElement('b'); b.textContent = title; t.appendChild(b);
+  if(body){ var s = document.createElement('span'); s.textContent = body; t.appendChild(s); }
+  t.hidden = false; clearTimeout(toastT); toastT = setTimeout(function(){ t.hidden = true; }, 3200);
+}
+function plain(h){ return String(h).replace(/<[^>]+>/g,'').replace('▫','ʸ') || 'Fracción'; }
 KEYS.forEach(function(row){ row.forEach(function(k){
   var b = document.createElement('button');
   b.className = 'key ' + (k.c||'');
   b.innerHTML = '<span class="s">'+(k.s||'')+'</span><span class="m">'+k.m+'</span>';
-  b.setAttribute('aria-label', k.m.replace(/<[^>]+>/g,'') + (k.s ? ', segunda función ' + k.s : ''));
+  b.setAttribute('aria-label', plain(k.m) + (k.s ? ', segunda función ' + k.s : ''));
+  var timer=null, long=false;
   b.addEventListener('pointerdown', function(ev){
-    ev.preventDefault();
-    if(navigator.vibrate) try{ navigator.vibrate(6); }catch(e){}
-    if(k.a==='shift'){ setShift(!shift); return; }
-    var useS = shift && (k.sv!==undefined || k.sa);
-    setShift(false);
-    if(useS){ if(k.sa) action(k.sa); else insertText(k.sv); }
-    else { if(k.a) action(k.a); else insertText(k.v); }
+    ev.preventDefault(); long=false; b.classList.add('down');
+    timer = setTimeout(function(){
+      long=true; b.classList.remove('down');
+      toast(plain(k.m) + (k.d ? ' — ' + k.d : ''), k.s ? 'SHIFT + '+plain(k.m)+' → '+k.s+(k.sd?': '+k.sd:'') : '');
+    }, 550);
   });
+  b.addEventListener('pointerup', function(ev){
+    ev.preventDefault(); clearTimeout(timer); b.classList.remove('down');
+    if(long) return;
+    if(navigator.vibrate) try{ navigator.vibrate(6); }catch(e){}
+    pressKey(k);
+  });
+  b.addEventListener('pointerleave', function(){ clearTimeout(timer); b.classList.remove('down'); });
+  b.addEventListener('pointercancel', function(){ clearTimeout(timer); b.classList.remove('down'); });
+  b.addEventListener('contextmenu', function(ev){ ev.preventDefault(); });
   b.addEventListener('click', function(ev){ ev.preventDefault(); });
   pad.appendChild(b);
 }); });
 
-/* ---------- Atajos por modo ---------- */
+/* Plantilla lineal → plantilla natural */
+function unitLatex(u){ return u.replace(/[A-Za-z]+/g, function(w){ return '\\mathrm{'+w+'}'; }); }
+function linToLatexTemplate(t){
+  t = String(t);
+  if(t.trim()==='to') return '\\operatorname{to}';
+  if(/^ to $/.test(t)) return '\\operatorname{to}';
+  var m = t.match(/^([a-zA-Z]\w*)\(([^()]*)\)$/);
+  if(m){
+    var inner = m[2]==='' ? '' : m[2].split(',').map(function(a){ a=a.replace(/§/g,'').trim(); return a==='' ? '#?' : (mathjsTeX(a) || a); }).join(',');
+    return '\\operatorname{'+m[1]+'}\\left('+inner+'\\right)';
+  }
+  var m2 = t.match(/^([a-zA-Z]\w*)\($/);
+  if(m2){
+    var cmd = FUNC_CMD['\\'+m2[1]] ? '\\'+m2[1] : '\\operatorname{'+m2[1]+'}';
+    return cmd+'\\left(#?\\right)';
+  }
+  if(/^\[/.test(t)) return '\\begin{pmatrix}#?&#?\\\\#?&#?\\end{pmatrix}';
+  if(/^[A-Za-z][A-Za-z0-9]*$/.test(t)) return t.length===1 ? t : (t==='pi' ? '\\pi' : '\\mathrm{'+t+'}');
+  if(/^[A-Za-z0-9/^]+$/.test(t)) return unitLatex(t);
+  return t.replace(/§/g,'#?');
+}
+
+/* ================= Atajos por modo ================= */
 var CHIPS = {
   calc: [
     ['Unidades', function(){ openCatalog('units'); }],
     ['Constantes', function(){ openCatalog('const'); }],
     ['Matrices', function(){ openCatalog('mat'); }],
     ['Estadística', function(){ openCatalog('stat'); }],
-    ['Convertir a…', function(){ insertText(' to '); }],
+    ['Convertir a…', ' to ', '\\operatorname{to}'],
     ['Variables', function(){ openCatalog('mem'); }]
   ],
   cas: [
-    ['Derivar', 'diff(§,x)'], ['Integrar', 'integrate(§,x)'], ['∫ definida', 'defint(§,0,1,x)'],
-    ['Límite', 'limit(§,x,0)'], ['Resolver', 'solve(§,x)'], ['Factorizar', 'factor(§)'],
-    ['Expandir', 'expand(§)'], ['Simplificar', 'simplify(§)'], ['Fracciones parciales', 'partfrac(§,x)'],
-    ['Sumatoria', 'sum(§,k,1,n)'], ['Sistema', '§; '], ['Definir f(x)', 'f(x):=§']
+    ['Derivar', 'diff(§,x)', '\\frac{d}{dx}\\left(#?\\right)'],
+    ['Integrar', 'integrate(§,x)', '\\int #?\\,dx'],
+    ['∫ definida', 'defint(§,0,1,x)', '\\int_{#?}^{#?}#?\\,dx'],
+    ['Límite', 'limit(§,x,0)', '\\lim_{x\\to #?}#?'],
+    ['Resolver', 'solve(§,x)', '\\operatorname{solve}\\left(#?,x\\right)'],
+    ['Factorizar', 'factor(§)', '\\operatorname{factor}\\left(#?\\right)'],
+    ['Expandir', 'expand(§)', '\\operatorname{expand}\\left(#?\\right)'],
+    ['Simplificar', 'simplify(§)', '\\operatorname{simplify}\\left(#?\\right)'],
+    ['Taylor', 'taylor(§,x,5,0)', '\\operatorname{taylor}\\left(#?,x,5,0\\right)'],
+    ['Fracciones parciales', 'partfrac(§,x)', '\\operatorname{partfrac}\\left(#?,x\\right)'],
+    ['Sumatoria', 'sum(§,k,1,n)', '\\sum_{k=1}^{#?}#?'],
+    ['Resolver numérico', 'nsolve(§,x,-10,10)', '\\operatorname{nsolve}\\left(#?,x,-10,10\\right)'],
+    ['Definir f(x)', 'f(x):=§', 'f\\left(x\\right)\\coloneq #?']
   ],
   graph: []
 };
@@ -775,12 +1452,15 @@ function renderChips(){
   (CHIPS[S.mode]||[]).forEach(function(ch){
     var b = document.createElement('button'); b.textContent = ch[0];
     b.addEventListener('pointerdown', function(e){ e.preventDefault(); });
-    b.addEventListener('click', function(){ typeof ch[1]==='function' ? ch[1]() : insertText(ch[1]); });
+    b.addEventListener('click', function(){
+      if(typeof ch[1]==='function') return ch[1]();
+      if(natural()) mfInsert(ch[2] || linToLatexTemplate(ch[1])); else insertText(ch[1]);
+    });
     c.appendChild(b);
   });
 }
 
-/* ---------- Catálogo ---------- */
+/* ================= Catálogo ================= */
 var CAT = {
   func: ['Funciones', [
     ['abs(', 'Valor absoluto'],['floor(', 'Parte entera inferior'],['ceil(', 'Parte entera superior'],['round(§, 2)', 'Redondear a n decimales'],
@@ -788,20 +1468,28 @@ var CAT = {
     ['exp(', 'Exponencial'],['cbrt(', 'Raíz cúbica'],['nthRoot(§,)', 'Raíz n-ésima'],['sinh(', 'Seno hiperbólico'],['cosh(', 'Coseno hiperbólico'],
     ['tanh(', 'Tangente hiperbólica'],['asinh(', 'Arcoseno hiperbólico'],['sec(', 'Secante'],['csc(', 'Cosecante'],['cot(', 'Cotangente'],
     ['nCr(§,)', 'Combinaciones'],['nPr(§,)', 'Permutaciones'],['isPrime(', 'Es primo'],['random()', 'Número aleatorio'],
-    ['hex(', 'A hexadecimal'],['bin(', 'A binario'],['oct(', 'A octal'],['0x', 'Literal hexadecimal (0xFF)']
+    ['hex(', 'A hexadecimal'],['bin(', 'A binario'],['oct(', 'A octal']
+  ]],
+  cas: ['CAS', [
+    ['diff(§,x)', 'Derivada'],['diff(§,x,2)', 'Segunda derivada'],['integrate(§,x)', 'Integral indefinida'],['defint(§,0,1,x)', 'Integral definida'],
+    ['nint(§,0,1,x)', 'Integral numérica'],['limit(§,x,0)', 'Límite'],['taylor(§,x,5,0)', 'Serie de Taylor (orden 5, en 0)'],
+    ['solve(§,x)', 'Resolver f(x) = 0'],['nsolve(§,x,-10,10)', 'Resolver numéricamente en [a; b]'],['factor(§)', 'Factorizar'],
+    ['expand(§)', 'Expandir'],['simplify(§)', 'Simplificar'],['partfrac(§,x)', 'Fracciones parciales'],['sum(§,k,1,n)', 'Sumatoria'],
+    ['product(§,k,1,n)', 'Productoria'],['coeffs(§,x)', 'Coeficientes del polinomio'],['deg(§)', 'Grado del polinomio'],
+    ['gcd(§,)', 'MCD de polinomios'],['lcm(§,)', 'MCM de polinomios']
   ]],
   stat: ['Estadística', [
-    ['mean(§)', 'Media · mean(1,2,3)'],['median(§)', 'Mediana'],['std(§)', 'Desviación estándar muestral'],['variance(§)', 'Varianza muestral'],
+    ['mean(§)', 'Media: mean(1,2,3)'],['median(§)', 'Mediana'],['std(§)', 'Desviación estándar muestral'],['variance(§)', 'Varianza muestral'],
     ['mode(§)', 'Moda'],['sum(§)', 'Suma'],['prod(§)', 'Producto'],['min(§)', 'Mínimo'],['max(§)', 'Máximo'],
-    ['quantileSeq([§], 0.25)', 'Cuantil'],['mad(§)', 'Desviación absoluta mediana'],
+    ['mad(§)', 'Desviación absoluta mediana'],
     ['normpdf(§, 0, 1)', 'Densidad normal (x, μ, σ)'],['normcdf(§, 0, 1)', 'Normal acumulada (x, μ, σ)'],['erf(', 'Función error'],
     ['factorial(', 'Factorial'],['gamma(', 'Función gamma']
   ]],
   mat: ['Matrices', [
-    ['[§,;,]', 'Matriz 2×2'],['[§,,;,,;,,]', 'Matriz 3×3'],['[§,,]', 'Vector de 3'],['det(', 'Determinante'],['inv(', 'Inversa'],
+    ['[§,;,]', 'Matriz 2×2'],['[§,,;,,;,,]', 'Matriz 3×3'],['det(', 'Determinante'],['inv(', 'Inversa'],
     ['transpose(', 'Traspuesta'],['trace(', 'Traza'],['eigs(§).values', 'Valores propios'],['identity(§)', 'Identidad n×n'],
     ['zeros(§,)', 'Matriz de ceros'],['dot(§,)', 'Producto punto'],['cross(§,)', 'Producto cruz'],['norm(', 'Norma'],
-    ['lusolve([§], [])', 'Resolver A·x = b'],['size(', 'Dimensiones']
+    ['lusolve(§,)', 'Resolver A·x = b'],['size(', 'Dimensiones']
   ]],
   cplx: ['Complejos', [
     ['i', 'Unidad imaginaria'],['re(', 'Parte real'],['im(', 'Parte imaginaria'],['arg(', 'Argumento'],['conj(', 'Conjugado'],
@@ -826,14 +1514,23 @@ var CAT = {
   ]],
   mem: ['Variables', []]
 };
-var catOrder = ['func','stat','mat','cplx','const','units','mem'];
+var catOrder = ['func','cas','stat','mat','cplx','const','units','mem'];
+function catInsert(txt){
+  closeSheet();
+  if(natural()){
+    if(txt==='eigs(§).values') return mfInsert('\\operatorname{eigs}\\left(#?\\right)');
+    if(/^\[§,;,\]$/.test(txt)) return mfInsert('\\begin{pmatrix}#?&#?\\\\#?&#?\\end{pmatrix}');
+    if(/^\[§,,;/.test(txt)) return mfInsert('\\begin{pmatrix}#?&#?&#?\\\\#?&#?&#?\\\\#?&#?&#?\\end{pmatrix}');
+    mfInsert(linToLatexTemplate(txt));
+  }else insertText(txt);
+}
 function openCatalog(which){
-  which = which || 'func';
+  which = which || (S.mode==='cas' ? 'cas' : 'func');
   var body = document.createElement('div');
   var cats = document.createElement('div'); cats.className='cats'; cats.setAttribute('role','tablist');
   var items = document.createElement('div'); items.className='items';
   function show(cat){
-    Array.prototype.forEach.call(cats.children, function(b){ b.setAttribute('aria-selected', b.dataset.c===cat); });
+    each(cats.children, function(b){ b.setAttribute('aria-selected', b.dataset.c===cat); });
     items.innerHTML='';
     var list = CAT[cat][1];
     if(cat==='mem'){
@@ -849,9 +1546,9 @@ function openCatalog(which){
     }
     list.forEach(function(it){
       var b = document.createElement('button'); b.className='item';
-      b.innerHTML = '<b></b><small></small>'; b.firstChild.textContent = it[0].replace('§','').trim() || it[0]; b.lastChild.textContent = it[1];
+      b.innerHTML = '<b></b><small></small>'; b.firstChild.textContent = it[0].replace(/§/g,'').trim() || it[0]; b.lastChild.textContent = it[1];
       b.addEventListener('pointerdown', function(e){ e.preventDefault(); });
-      b.onclick = function(){ closeSheet(); insertText(/[(\[§]|^ to $/.test(it[0]) || cat==='units' || cat==='const' || cat==='mem' ? it[0] : it[0]); };
+      b.onclick = function(){ catInsert(it[0]); };
       items.appendChild(b);
     });
   }
@@ -863,22 +1560,23 @@ function openCatalog(which){
   openSheet('Catálogo', body); show(which);
 }
 
-/* ---------- Ajustes ---------- */
+/* ================= Ajustes ================= */
 function seg(label, opts, cur, onPick){
   var r = document.createElement('div'); r.className='setrow';
   var s = document.createElement('span'); s.textContent = label; r.appendChild(s);
   var g = document.createElement('div'); g.className='seg';
   opts.forEach(function(o){
     var b = document.createElement('button'); b.textContent=o[1]; b.setAttribute('aria-pressed', o[0]===cur);
-    b.onclick = function(){ Array.prototype.forEach.call(g.children, function(x){ x.setAttribute('aria-pressed','false'); }); b.setAttribute('aria-pressed','true'); onPick(o[0]); };
+    b.onclick = function(){ each(g.children, function(x){ x.setAttribute('aria-pressed','false'); }); b.setAttribute('aria-pressed','true'); onPick(o[0]); };
     g.appendChild(b);
   });
   r.appendChild(g); return r;
 }
 function openSettings(){
   var body = document.createElement('div');
+  body.appendChild(seg('Escritura', [['natural','Natural (libro de texto)'],['linear','Lineal']], S.input, function(v){ S.input=v; applyInputMode(); save(); }));
   body.appendChild(seg('Tema', [['auto','Automático'],['light','Marfil'],['dark','Grafito'],['slate','Pizarra']], S.theme, function(v){ S.theme=v; applyTheme(); save(); }));
-  body.appendChild(seg('Ángulos', [['DEG','Grados'],['RAD','Radianes']], S.angle, function(v){ S.angle=v; updateStatus(); save(); }));
+  body.appendChild(seg('Ángulos en Cálculo', [['DEG','Grados'],['RAD','Radianes']], S.angle, function(v){ S.angle=v; updateStatus(); save(); }));
   body.appendChild(seg('Formato de números', [[true,'1.234,5'],[false,'1 234.5']], S.comma, function(v){ S.comma=v; save(); renderHistory(); drawGraph(); }));
   body.appendChild(seg('Dígitos significativos', [[10,'10'],[12,'12'],[15,'15']], S.digits, function(v){ S.digits=v; save(); renderHistory(); }));
   body.appendChild(seg('Resultado por defecto', [[true,'Exacto'],[false,'Decimal']], S.exact, function(v){ S.exact=v; updateStatus(); save(); }));
@@ -886,81 +1584,115 @@ function openSettings(){
   clr.onclick = function(){ S.history=[]; save(); renderHistory(); closeSheet(); };
   body.appendChild(clr);
   var ab = document.createElement('p'); ab.className='about';
-  ab.textContent = 'Calcu v0.1 · Software libre (GPL-3.0). Motores: math.js (Apache-2.0), Nerdamer (MIT) y MathJax (Apache-2.0). Las gráficas usan radianes. Al escribir, el punto es el separador decimal y la coma separa argumentos.';
+  ab.textContent = 'Calcu v'+VERSION+' · Software libre (GPL-3.0). Motores: math.js (Apache-2.0), Nerdamer (MIT), Algebrite (MIT) y MathLive (MIT).';
   body.appendChild(ab);
   openSheet('Ajustes', body);
 }
+
+/* ================= Hoja inferior ================= */
 var sheet = $('#sheet'), back = $('#sheetback');
-function openSheet(title, content){
-  $('#sheetTitle').textContent = title; var b = $('#sheetBody'); b.innerHTML=''; b.appendChild(content);
+function openSheet(title, content, headExtra){
+  $('#sheetTitle').textContent = title;
+  var old = sheet.querySelector('.headextra'); if(old) old.remove();
+  if(headExtra){ headExtra.classList.add('headextra'); sheet.querySelector('.sheethead').insertBefore(headExtra, $('#sheetTitle')); }
+  var b = $('#sheetBody'); b.innerHTML=''; b.appendChild(content); b.scrollTop = 0;
   sheet.hidden=false; back.hidden=false;
 }
 function closeSheet(){ sheet.hidden=true; back.hidden=true; }
 back.onclick = closeSheet; $('#sheetClose').onclick = closeSheet;
 $('#btnSet').onclick = openSettings;
-$('#btnCat').onclick = function(){ openCatalog(S.mode==='calc' ? 'func' : 'func'); };
+$('#btnCat').onclick = function(){ openCatalog(); };
+$('#btnHelp').onclick = function(){ openManual(S.mode==='graph' ? 'grafica' : S.mode==='cas' ? 'cas' : null); };
 
 function applyTheme(){
   var r = document.documentElement;
   if(S.theme==='auto') r.removeAttribute('data-theme'); else r.setAttribute('data-theme', S.theme);
-  setTimeout(function(){ document.querySelector('meta[name="theme-color"]').setAttribute('content', getComputedStyle(r).getPropertyValue('--bg').trim()); drawGraph(); }, 30);
+  setTimeout(function(){ $('meta[name="theme-color"]').setAttribute('content', getComputedStyle(r).getPropertyValue('--bg').trim()); drawGraph(); }, 30);
 }
 function updateStatus(){
+  var cas = S.mode==='cas';
+  $('#stAngle').hidden = cas; $('#stCas').hidden = !cas;
   $('#stAngle').textContent = S.angle;
   $('#stExact').textContent = S.exact ? 'Exacto' : 'Decimal';
   $('#stExact').classList.toggle('on', S.exact);
 }
+function applyInputMode(){
+  var nat = S.input==='natural';
+  mf.hidden = !nat; expr.hidden = nat; preview.hidden = nat;
+  $('#btnKbd').setAttribute('aria-pressed','false');
+  expr.setAttribute('inputmode','none'); setMfInputMode('none');
+  onInputChange();
+}
 
-/* ---------- Teclado del sistema ---------- */
+/* Teclado del sistema */
 $('#btnKbd').addEventListener('pointerdown', function(e){ e.preventDefault(); });
 $('#btnKbd').onclick = function(){
   var on = this.getAttribute('aria-pressed')!=='true';
   this.setAttribute('aria-pressed', on);
-  expr.setAttribute('inputmode', on ? 'text' : 'none');
-  expr.blur(); setTimeout(function(){ expr.focus(); }, 30);
+  if(S.input==='natural'){ setMfInputMode(on ? 'text' : 'none'); mf.blur(); setTimeout(function(){ mfFocus(); }, 40); }
+  else { expr.setAttribute('inputmode', on ? 'text' : 'none'); expr.blur(); setTimeout(function(){ expr.focus(); }, 40); }
 };
 
-/* ---------- Modos ---------- */
+/* ================= Modos ================= */
 function setMode(m){
   S.mode = m;
-  Array.prototype.forEach.call(document.querySelectorAll('.tabs button'), function(b){ b.setAttribute('aria-selected', b.dataset.mode===m); });
+  each(document.querySelectorAll('.tabs button'), function(b){ b.setAttribute('aria-selected', b.dataset.mode===m); });
   var g = m==='graph';
-  $('#lcd').hidden = g; $('#lcd').style.display = g ? 'none' : '';
+  $('#lcd').style.display = g ? 'none' : '';
   $('#graph').hidden = !g;
   pad.hidden = g && $('#gPad').getAttribute('aria-pressed')!=='true';
-  if(!g) activeInput = expr;
+  if(!g) activeInput = null;
   renderChips(); updateStatus(); renderHistory(); save();
-  if(g) requestAnimationFrame(function(){ drawGraph(); });
-  expr.value=''; onInputChange();
+  if(g) requestAnimationFrame(drawGraph);
+  if(S.input==='natural') mf.value=''; else { expr.value=''; onInputChange(); }
 }
-Array.prototype.forEach.call(document.querySelectorAll('.tabs button'), function(b){ b.onclick = function(){ setMode(b.dataset.mode); }; });
+each(document.querySelectorAll('.tabs button'), function(b){ b.onclick = function(){ setMode(b.dataset.mode); }; });
 
-/* ---------- Gráficas ---------- */
+/* ================= Gráficas ================= */
 var cv = $('#cv'), ctx = cv.getContext('2d');
 var fcache = {};
-function getFn(src){
-  src = prep(src||'').trim(); if(!src) return null;
-  if(!(src in fcache)){
-    try{
-      var c = math.compile(src), sc = makeScope(true);
-      fcache[src] = function(x){ sc.x = x; try{ var y = c.evaluate(sc); return typeof y==='number' ? y : (y && typeof y.re==='number' && Math.abs(y.im)<1e-12 ? y.re : NaN); }catch(e){ return NaN; } };
-    }catch(e){ fcache[src] = null; }
+function classify(src){
+  var s = prep(src||'').trim(); if(!s) return null;
+  var m = s.match(/^(.*?)(<=|>=|<|>|=)(.*)$/);
+  if(m){
+    var L=m[1].trim(), R=m[3].trim(), op=m[2];
+    if(!L || !R) return {kind:'bad'};
+    if(op==='=' && L==='y' && !/\by\b/.test(R)) return {kind:'fx', e:R};
+    if(op==='=' && R==='y' && !/\by\b/.test(L)) return {kind:'fx', e:L};
+    return {kind: op==='=' ? 'implicit' : 'ineq', op:op, g:'('+L+')-('+R+')'};
   }
-  return fcache[src];
+  return {kind:'fx', e:s};
+}
+function getFn(src){
+  var c = classify(src); if(!c || c.kind!=='fx') return null;
+  var key = 'fx:'+c.e;
+  if(!(key in fcache)){ try{ fcache[key] = compileX(c.e, 'x'); fcache[key](0.5); }catch(e){ fcache[key] = null; } }
+  return fcache[key];
+}
+function getFxy(g){
+  var key = 'xy:'+g;
+  if(!(key in fcache)){
+    try{
+      var c = math.compile(g), sc = makeScope(true);
+      fcache[key] = function(x,y){ sc.x=x; sc.y=y; try{ var v=c.evaluate(sc); return typeof v==='number' ? v : NaN; }catch(e){ return NaN; } };
+    }catch(e){ fcache[key] = null; }
+  }
+  return fcache[key];
 }
 function colorOf(i){ return getComputedStyle(document.documentElement).getPropertyValue('--g'+(i+1)).trim(); }
 function renderFuncs(){
   var box = $('#funcs'); box.innerHTML='';
+  var padOn = $('#gPad').getAttribute('aria-pressed')==='true';
   S.funcs.forEach(function(f,i){
     var r = document.createElement('div'); r.className='frow'+(S.gsel===i?' sel':''); r.style.setProperty('--c', colorOf(i));
     var d = document.createElement('button'); d.className='dot'; d.setAttribute('aria-pressed', f.on); d.setAttribute('aria-label','Mostrar u ocultar y'+(i+1));
     d.onclick = function(){ f.on=!f.on; d.setAttribute('aria-pressed', f.on); save(); drawGraph(); };
     var l = document.createElement('button'); l.className='lab'; l.textContent='y'+(i+1)+' ='; l.setAttribute('aria-label','Seleccionar y'+(i+1)+' para análisis');
     l.onclick = function(){ S.gsel=i; save(); renderFuncs(); drawGraph(); };
-    var inp = document.createElement('input'); inp.value=f.e; inp.placeholder='f(x)'; inp.autocapitalize='off'; inp.autocomplete='off'; inp.spellcheck=false;
+    var inp = document.createElement('input'); inp.value=f.e; inp.placeholder= i===2 ? 'x^2+y^2=9' : 'f(x)'; inp.autocapitalize='off'; inp.autocomplete='off'; inp.spellcheck=false;
     inp.setAttribute('autocorrect','off'); inp.setAttribute('aria-label','Función y'+(i+1));
-    inp.setAttribute('inputmode', $('#gPad').getAttribute('aria-pressed')==='true' ? 'none' : 'text');
-    inp.addEventListener('focus', function(){ activeInput = inp; S.gsel=i; box.querySelectorAll('.frow').forEach(function(x,j){ x.classList.toggle('sel', j===i); }); });
+    inp.setAttribute('inputmode', padOn ? 'none' : 'text');
+    inp.addEventListener('focus', function(){ activeInput = inp; S.gsel=i; each(box.querySelectorAll('.frow'), function(x,j){ x.classList.toggle('sel', j===i); }); });
     inp.addEventListener('input', function(){ f.e = inp.value; scheduleGraph(); });
     inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); inp.blur(); drawGraph(); } });
     inp.dataset.i=i;
@@ -968,15 +1700,8 @@ function renderFuncs(){
   });
 }
 var gTimer=null;
-function scheduleGraph(){
-  if(activeInput!==expr){ var i=+activeInput.dataset.i; if(S.funcs[i]) S.funcs[i].e = activeInput.value; }
-  clearTimeout(gTimer); gTimer=setTimeout(function(){ save(); drawGraph(); }, 180);
-}
-function stdView(){
-  var W = cv.clientWidth||320, H = cv.clientHeight||240;
-  var ya = 10*H/W;
-  S.view = {xmin:-10, xmax:10, ymin:-ya, ymax:ya};
-}
+function scheduleGraph(){ clearTimeout(gTimer); gTimer=setTimeout(function(){ save(); marks=[]; drawGraph(); }, 180); }
+function stdView(){ var W = cv.clientWidth||320, H = cv.clientHeight||240, ya = 10*H/W; S.view = {xmin:-10, xmax:10, ymin:-ya, ymax:ya}; }
 function nice(raw){ var p=Math.pow(10,Math.floor(Math.log10(raw))), n=raw/p; return (n<1.5?1:n<3.5?2:n<7.5?5:10)*p; }
 function shortNum(v, step){
   if(Math.abs(v)<step*1e-6) return '0';
@@ -984,7 +1709,45 @@ function shortNum(v, step){
   var s = Math.abs(v)>=1e5||Math.abs(v)<1e-4 ? v.toExponential(1) : v.toFixed(dec);
   return S.comma ? s.replace('.',',') : s;
 }
-var marks = [], traceX = null, tracing = false;
+var marks = [], traceX = null, tracing = false, dragging = false;
+function hexA(col, a){
+  var c = col.replace('#',''); if(c.length===3) c = c.split('').map(function(x){ return x+x; }).join('');
+  var n = parseInt(c,16); return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';
+}
+function drawRelation(c, i, X, Y, W, H, V){
+  var g = getFxy(c.g); if(!g) return;
+  var step = dragging ? 8 : 4;
+  var nx = Math.ceil(W/step), ny = Math.ceil(H/step), vals = new Float64Array((nx+1)*(ny+1));
+  for(var j=0;j<=ny;j++){ var y = V.ymax - j*step/H*(V.ymax-V.ymin);
+    for(var k=0;k<=nx;k++){ vals[j*(nx+1)+k] = g(V.xmin + k*step/W*(V.xmax-V.xmin), y); } }
+  var col = colorOf(i);
+  if(c.kind==='ineq'){
+    var gt = c.op==='>' || c.op==='>=';
+    ctx.fillStyle = hexA(col, .22);
+    for(j=0;j<ny;j++) for(k=0;k<nx;k++){
+      var cv0 = (vals[j*(nx+1)+k]+vals[j*(nx+1)+k+1]+vals[(j+1)*(nx+1)+k]+vals[(j+1)*(nx+1)+k+1])/4;
+      if(isFinite(cv0) && (gt ? cv0>0 : cv0<0)) ctx.fillRect(k*step, j*step, step, step);
+    }
+  }
+  ctx.strokeStyle = col; ctx.lineWidth = S.gsel===i ? 2.6 : 2;
+  if(c.kind==='ineq' && (c.op==='<' || c.op==='>')) ctx.setLineDash([6,5]);
+  ctx.beginPath();
+  for(j=0;j<ny;j++) for(k=0;k<nx;k++){
+    var a=vals[j*(nx+1)+k], b=vals[j*(nx+1)+k+1], d=vals[(j+1)*(nx+1)+k], e2=vals[(j+1)*(nx+1)+k+1];
+    if(!(isFinite(a)&&isFinite(b)&&isFinite(d)&&isFinite(e2))) continue;
+    var pts=[], x0=k*step, y0=j*step;
+    if((a>0)!==(b>0)) pts.push([x0+step*a/(a-b), y0]);
+    if((b>0)!==(e2>0)) pts.push([x0+step, y0+step*b/(b-e2)]);
+    if((d>0)!==(e2>0)) pts.push([x0+step*d/(d-e2), y0+step]);
+    if((a>0)!==(d>0)) pts.push([x0, y0+step*a/(a-d)]);
+    var mx = Math.max(Math.abs(a),Math.abs(b),Math.abs(d),Math.abs(e2));
+    if(pts.length>=2 && mx < 1e6){
+      ctx.moveTo(pts[0][0],pts[0][1]); ctx.lineTo(pts[1][0],pts[1][1]);
+      if(pts.length===4){ ctx.moveTo(pts[2][0],pts[2][1]); ctx.lineTo(pts[3][0],pts[3][1]); }
+    }
+  }
+  ctx.stroke(); ctx.setLineDash([]);
+}
 function drawGraph(){
   if(S.mode!=='graph') return;
   var dpr = window.devicePixelRatio||1, W = cv.clientWidth, H = cv.clientHeight;
@@ -1011,14 +1774,16 @@ function drawGraph(){
   ctx.textAlign='left'; ctx.textBaseline='middle';
   for(gy=Math.ceil(V.ymin/ys)*ys; gy<=V.ymax; gy+=ys){ if(Math.abs(gy)<ys/2 || Y(gy)<8 || Y(gy)>H-8) continue; ctx.fillText(shortNum(gy,ys), Math.min(ay+4, W-30), Y(gy)); }
   S.funcs.forEach(function(f,i){
-    if(!f.on) return; var fn = getFn(f.e); if(!fn) return;
+    if(!f.on) return; var c = classify(f.e); if(!c || c.kind==='bad') return;
+    if(c.kind!=='fx'){ drawRelation(c, i, X, Y, W, H, V); return; }
+    var fn = getFn(f.e); if(!fn) return;
     ctx.strokeStyle = colorOf(i); ctx.lineWidth = S.gsel===i ? 2.6 : 2; ctx.beginPath();
-    var pen=false, py=null, step=0.5;
+    var pen=false, py=null, step = dragging ? 1 : 0.5;
     for(var px=0; px<=W; px+=step){
       var x = V.xmin + px/sx, y = fn(x);
       if(!isFinite(y)){ pen=false; py=null; continue; }
       var cy = Y(y);
-      if(py!==null && Math.abs(cy-py) > H*1.5){ pen=false; }
+      if(py!==null && Math.abs(cy-py) > H*1.5) pen=false;
       cy = Math.max(-H*2, Math.min(H*3, cy));
       if(pen) ctx.lineTo(px,cy); else { ctx.moveTo(px,cy); pen=true; }
       py = cy;
@@ -1034,6 +1799,7 @@ function drawGraph(){
     ctx.strokeStyle=ink; ctx.setLineDash([4,4]); ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(X(traceX),0); ctx.lineTo(X(traceX),H); ctx.stroke(); ctx.setLineDash([]);
     if(tf){ var ty=tf(traceX); if(isFinite(ty)){ ctx.fillStyle=colorOf(S.gsel); ctx.beginPath(); ctx.arc(X(traceX),Y(ty),6,0,7); ctx.fill();
       $('#readout').textContent = 'y'+(S.gsel+1)+':  x = '+fmtNum(traceX,8)+'   y = '+fmtNum(ty,8); } else { $('#readout').textContent = 'x = '+fmtNum(traceX,8)+'   y indefinido'; } }
+    else $('#readout').textContent = 'Trazar funciona con funciones y = f(x). Selecciona una tocando su etiqueta.';
   }
 }
 function toWorld(px,py){ var V=S.view, W=cv.clientWidth, H=cv.clientHeight; return [V.xmin+px/W*(V.xmax-V.xmin), V.ymin+(H-py)/H*(V.ymax-V.ymin)]; }
@@ -1055,14 +1821,14 @@ cv.addEventListener('pointermove', function(e){
     var k = pinch0.d/d, v0=pinch0.v;
     var cx = v0.xmin + pinch0.c[0]/W*(v0.xmax-v0.xmin), cy = v0.ymin + (H-pinch0.c[1])/H*(v0.ymax-v0.ymin);
     S.view = {xmin:cx-(cx-v0.xmin)*k, xmax:cx+(v0.xmax-cx)*k, ymin:cy-(cy-v0.ymin)*k, ymax:cy+(v0.ymax-cy)*k};
-    drawGraph(); return;
+    dragging = true; drawGraph(); return;
   }
   if(tracing){ traceX = toWorld(e.offsetX,e.offsetY)[0]; drawGraph(); return; }
   var dx=(e.offsetX-prev.x)*(V.xmax-V.xmin)/W, dy=(e.offsetY-prev.y)*(V.ymax-V.ymin)/H;
   S.view = {xmin:V.xmin-dx, xmax:V.xmax-dx, ymin:V.ymin+dy, ymax:V.ymax+dy};
-  drawGraph();
+  dragging = true; drawGraph();
 });
-function endPtr(e){ ptrs.delete(e.pointerId); if(ptrs.size<2) pinch0=null; save(); }
+function endPtr(e){ ptrs.delete(e.pointerId); if(ptrs.size<2) pinch0=null; if(!ptrs.size && dragging){ dragging=false; drawGraph(); } save(); }
 cv.addEventListener('pointerup', endPtr); cv.addEventListener('pointercancel', endPtr);
 cv.addEventListener('wheel', function(e){
   e.preventDefault(); var k = e.deltaY>0 ? 1.12 : 1/1.12, w = toWorld(e.offsetX,e.offsetY), V=S.view;
@@ -1072,23 +1838,7 @@ cv.addEventListener('wheel', function(e){
 new ResizeObserver(function(){ drawGraph(); }).observe(cv);
 
 function selFn(){ var f=S.funcs[S.gsel]; return f && f.e.trim() ? getFn(f.e) : null; }
-function findRoots(f,a,b){
-  var n=900, out=[], px=a, py=f(a);
-  for(var i=1;i<=n;i++){
-    var x=a+(b-a)*i/n, y=f(x);
-    if(isFinite(py)&&isFinite(y)){
-      if(py===0) out.push(px);
-      else if(py*y<0){
-        var lo=px, hi=x, flo=py;
-        for(var k=0;k<80;k++){ var mid=(lo+hi)/2, fm=f(mid); if(!isFinite(fm)) break; if(flo*fm<=0) hi=mid; else { lo=mid; flo=fm; } }
-        var r=(lo+hi)/2, fr=f(r);
-        if(isFinite(fr) && Math.abs(fr) < 1e-6*(1+Math.abs(py)+Math.abs(y))) out.push(r);
-      }
-    }
-    px=x; py=y;
-  }
-  return out.filter(function(r,i){ return i===0 || Math.abs(r-out[i-1])>(b-a)*1e-6; });
-}
+function needFx(){ var c = classify((S.funcs[S.gsel]||{}).e); if(c && c.kind!=='fx'){ $('#readout').textContent = 'El análisis funciona con funciones y = f(x). y'+(S.gsel+1)+' es una relación.'; return true; } return false; }
 function golden(f,a,b,max){
   var g=(Math.sqrt(5)-1)/2, c=b-g*(b-a), d=a+g*(b-a), s=max?-1:1;
   for(var i=0;i<100;i++){ if(s*f(c)<s*f(d)) b=d; else a=c; c=b-g*(b-a); d=a+g*(b-a); }
@@ -1106,23 +1856,26 @@ function findExt(f,a,b){
 }
 function showMarks(lines){ $('#readout').textContent = lines.length ? lines.join('   ') : 'Nada en la ventana visible. Mueve o aleja la gráfica.'; drawGraph(); }
 $('#gRoots').onclick = function(){
+  if(needFx()) return;
   var f=selFn(); if(!f){ $('#readout').textContent='Escribe una función en y'+(S.gsel+1)+'.'; return; }
-  var r=findRoots(f,S.view.xmin,S.view.xmax).slice(0,8);
+  var r=numRoots(f,S.view.xmin,S.view.xmax,900).slice(0,8);
   marks = r.map(function(x){ return [x,0]; });
   showMarks(r.map(function(x){ return 'x = '+fmtNum(x,8); }));
 };
 $('#gExt').onclick = function(){
+  if(needFx()) return;
   var f=selFn(); if(!f){ $('#readout').textContent='Escribe una función en y'+(S.gsel+1)+'.'; return; }
   var r=findExt(f,S.view.xmin,S.view.xmax).slice(0,8);
   marks = r.map(function(m){ return [m[1],m[2]]; });
   showMarks(r.map(function(m){ return m[0]+' ('+fmtNum(m[1],6)+'; '+fmtNum(m[2],6)+')'; }));
 };
 $('#gInt').onclick = function(){
+  if(needFx()) return;
   var f=selFn(); var j=-1;
-  for(var k=1;k<S.funcs.length;k++){ var idx=(S.gsel+k)%S.funcs.length; if(S.funcs[idx].on && S.funcs[idx].e.trim()){ j=idx; break; } }
-  if(!f || j<0){ $('#readout').textContent='Hacen falta dos funciones visibles.'; return; }
-  var g=getFn(S.funcs[j].e); if(!g) return;
-  var r=findRoots(function(x){ return f(x)-g(x); }, S.view.xmin, S.view.xmax).slice(0,8);
+  for(var k=1;k<S.funcs.length;k++){ var idx=(S.gsel+k)%S.funcs.length; if(S.funcs[idx].on && getFn(S.funcs[idx].e)){ j=idx; break; } }
+  if(!f || j<0){ $('#readout').textContent='Hacen falta dos funciones y = f(x) visibles.'; return; }
+  var g=getFn(S.funcs[j].e);
+  var r=numRoots(function(x){ return f(x)-g(x); }, S.view.xmin, S.view.xmax, 900).slice(0,8);
   marks = r.map(function(x){ return [x,f(x)]; });
   showMarks(r.map(function(x){ return 'y'+(S.gsel+1)+'∩y'+(j+1)+' ('+fmtNum(x,6)+'; '+fmtNum(f(x),6)+')'; }));
 };
@@ -1131,31 +1884,180 @@ $('#gFit').onclick = function(){
   S.funcs.forEach(function(fd){ if(!fd.on) return; var f=getFn(fd.e); if(!f) return;
     for(var i=0;i<=400;i++){ var y=f(V.xmin+(V.xmax-V.xmin)*i/400); if(isFinite(y)){ lo=Math.min(lo,y); hi=Math.max(hi,y); } } });
   if(!isFinite(lo)) return; if(hi-lo<1e-9){ lo-=1; hi+=1; }
-  var pad=(hi-lo)*0.08; S.view={xmin:V.xmin,xmax:V.xmax,ymin:lo-pad,ymax:hi+pad}; marks=[]; drawGraph(); save();
+  var p=(hi-lo)*0.08; S.view={xmin:V.xmin,xmax:V.xmax,ymin:lo-p,ymax:hi+p}; marks=[]; drawGraph(); save();
 };
 $('#gStd').onclick = function(){ stdView(); marks=[]; drawGraph(); save(); };
 $('#gTrace').onclick = function(){
   tracing=!tracing; this.setAttribute('aria-pressed', tracing);
-  if(tracing){ traceX = (S.view.xmin+S.view.xmax)/2; } else $('#readout').textContent='Arrastra para mover, pellizca para acercar.';
+  if(tracing) traceX = (S.view.xmin+S.view.xmax)/2; else $('#readout').textContent='Arrastra para mover, pellizca para acercar.';
   drawGraph();
 };
 $('#gPad').addEventListener('pointerdown', function(e){ e.preventDefault(); });
 $('#gPad').onclick = function(){
   var on = this.getAttribute('aria-pressed')!=='true'; this.setAttribute('aria-pressed', on);
   pad.hidden = !on;
-  document.querySelectorAll('.frow input').forEach(function(i){ i.setAttribute('inputmode', on?'none':'text'); });
-  if(on && activeInput===expr){ var first=document.querySelector('.frow input'); if(first){ activeInput=first; } }
+  each(document.querySelectorAll('.frow input'), function(i){ i.setAttribute('inputmode', on?'none':'text'); });
+  if(on && !activeInput){ var first=document.querySelectorAll('.frow input')[S.gsel]; if(first) activeInput=first; }
   requestAnimationFrame(drawGraph);
 };
-
-/* ---------- Arranque ---------- */
-function boot(){
-  replayCas(); applyTheme(); renderFuncs(); setMode(S.mode);
-  $('#loading').remove();
-  if(!isTouch) expr.focus();
+$('#gTable').onclick = openTable;
+function openTable(){
+  var body = document.createElement('div');
+  var ctl = document.createElement('div'); ctl.className='tblctl';
+  ctl.innerHTML = '<label>Inicio<input id="tStart" inputmode="decimal" value="-5"></label><label>Paso<input id="tStep" inputmode="decimal" value="1"></label><label>Filas<input id="tRows" inputmode="numeric" value="21"></label>';
+  var wrap = document.createElement('div'); wrap.style.overflowX='auto';
+  body.appendChild(ctl); body.appendChild(wrap);
+  function num(id, d){ var v = Number(String(body.querySelector(id).value).replace(',','.')); return isFinite(v) ? v : d; }
+  function build(){
+    var a=num('#tStart',-5), h=num('#tStep',1), n=Math.min(200, Math.max(1, Math.round(num('#tRows',21))));
+    var cols = []; S.funcs.forEach(function(f,i){ if(f.on){ var fn=getFn(f.e); if(fn) cols.push([i,fn]); } });
+    var t = '<table class="vtable"><thead><tr><th>x</th>' + cols.map(function(c){ return '<th style="color:'+colorOf(c[0])+'">y'+(c[0]+1)+'</th>'; }).join('') + '</tr></thead><tbody>';
+    for(var r=0;r<n;r++){ var x = a + r*h; x = Math.abs(x)<1e-12 ? 0 : x;
+      t += '<tr><td>'+fmtNum(x,8)+'</td>' + cols.map(function(c){ return '<td>'+fmtNum(c[1](x),8)+'</td>'; }).join('') + '</tr>'; }
+    t += '</tbody></table>';
+    wrap.innerHTML = cols.length ? t : '<p class="about">No hay funciones y = f(x) visibles para tabular.</p>';
+  }
+  each(ctl.querySelectorAll('input'), function(i){ i.addEventListener('input', build); });
+  build();
+  openSheet('Tabla de valores', body);
 }
-window.addEventListener('load', boot);
-if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){ navigator.serviceWorker.register('sw.js'); }
+
+/* ================= Manual de usuario ================= */
+var MANUAL = [
+ {id:'inicio', t:'Primeros pasos', d:'Cómo está organizada la calculadora',
+  h:'<p>Calcu tiene tres modos, en las pestañas de arriba:</p><ul><li><b>Cálculo</b>: operaciones numéricas, unidades, matrices, estadística y complejos.</li><li><b>CAS</b>: álgebra simbólica con x: derivar, integrar, resolver ecuaciones, factorizar.</li><li><b>Gráfica</b>: funciones, relaciones y desigualdades, con análisis y tabla de valores.</li></ul><p>Escribe con el teclado y pulsa <b>EXE</b>. El resultado queda en el historial: toca la expresión para volver a usarla o el resultado para insertarlo.</p><p>Si no sabes qué hace una tecla, <b>mantenla pulsada</b>: aparece su descripción y la de su segunda función. Los botones de arriba abren este manual (?), el Catálogo con todas las funciones (☰) y los Ajustes (⚙).</p>',
+  ex:[{m:'calc',e:'2+3*4'},{m:'calc',e:'1/3+1/4'}]},
+ {id:'teclado', t:'El teclado', d:'SHIFT, borrar, mover el cursor y teclas especiales',
+  h:'<p>Cada tecla tiene una función principal y otra en amarillo. Pulsa <b>SHIFT</b> y luego la tecla para usar la amarilla; SHIFT se desactiva solo.</p><ul><li><b>DEL</b> borra a la izquierda del cursor; <b>SHIFT + DEL</b> (AC) borra toda la línea.</li><li><b>◀ ▶</b> mueven el cursor. Con la línea vacía, <b>◀</b> recupera la última expresión para corregirla.</li><li><b>S⇔D</b> alterna el último resultado entre exacto (½, √2, π) y decimal.</li><li><b>SHIFT + EXE</b> calcula directamente en decimal.</li><li>La tecla de <b>fracción</b> (dos recuadros) pone lo que está antes del cursor en el numerador.</li><li><b>abc</b>, junto a la línea de entrada, activa el teclado del teléfono.</li></ul><p>Referencia completa de teclas:</p>{{KEYS}}',
+  ex:[]},
+ {id:'escritura', t:'Escritura natural y lineal', d:'Escribir como en el cuaderno o en una sola línea',
+  h:'<p>En <b>escritura natural</b> (la predeterminada) las fracciones, raíces, potencias, integrales y límites se ven como en un libro. Las plantillas traen recuadros vacíos: escribe en uno y pasa al siguiente con <b>▶</b>. Si pulsas EXE con recuadros vacíos, la calculadora te lo avisa.</p><p>En <b>escritura lineal</b> todo va en una sola línea, como <code>sqrt(2)/3</code>, con una vista previa encima. Es útil para expresiones largas o si prefieres el teclado del teléfono. Se cambia en <b>Ajustes → Escritura</b>.</p><h4>Reglas prácticas</h4><ul><li>La multiplicación implícita funciona: <code>2x</code>, <code>3(x+1)</code>, <code>x sin(x)</code>.</li><li>El punto es el separador decimal al escribir; la coma separa argumentos: <code>round(3.14159, 2)</code>.</li><li>Las gráficas siempre usan escritura lineal.</li></ul>',
+  ex:[{m:'calc',e:'sqrt(2)/3+2^10'}]},
+ {id:'calculo', t:'Cálculo', d:'Exacto y decimal, Ans, variables, ángulos',
+  h:'<p>Cuando el resultado tiene forma exacta, se muestra primero (fracciones, raíces, π) y debajo su valor decimal. <b>S⇔D</b> invierte el orden; en <b>Ajustes → Resultado por defecto</b> eliges cuál ver primero.</p><ul><li><b>Ans</b> (SHIFT + +) es el último resultado. Tocar el último resultado del historial también inserta Ans.</li><li><b>Variables</b>: <code>a = 5</code> guarda el valor; luego <code>a^2</code> lo usa. Se conservan al cerrar la app.</li><li><b>Funciones</b>: <code>f(x) = x^2+1</code> y luego <code>f(3)</code>.</li><li><b>Ángulos</b>: DEG o RAD se elige en Ajustes y se ve en la pantalla. Con SHIFT + 5 (°) fuerzas grados en un valor: <code>sin(30 deg)</code>.</li><li><b>Formato</b>: resultados como <code>1.234,5</code> o <code>1 234.5</code>, y 10, 12 o 15 dígitos.</li></ul>',
+  ex:[{m:'calc',e:'sqrt(8)+sqrt(18)'},{m:'calc',e:'sin(30)'},{m:'calc',e:'a = 5'},{m:'calc',e:'f(x) = x^2+1'},{m:'calc',e:'f(3)'}]},
+ {id:'unidades', t:'Unidades y conversiones', d:'Incluye bbl, MBD, MMBD, MMBTU y TM',
+  h:'<p>Escribe el valor con su unidad y usa <b>to</b> (SHIFT + 1) para convertir. Las unidades se combinan: <code>km/h</code>, <code>m^3/day</code>, <code>bbl/day</code>.</p><table><tr><th>Unidad</th><th>Significado</th></tr><tr><td><code>bbl</code></td><td>Barril de petróleo (42 gal = 158,987 L)</td></tr><tr><td><code>Mbbl</code>, <code>MMbbl</code></td><td>Miles y millones de barriles</td></tr><tr><td><code>MBD</code>, <code>MMBD</code></td><td>Miles y millones de barriles por día</td></tr><tr><td><code>MMBTU</code></td><td>Millones de BTU</td></tr><tr><td><code>TM</code></td><td>Tonelada métrica</td></tr><tr><td><code>degC</code>, <code>degF</code>, <code>K</code></td><td>Temperaturas (conversión con desplazamiento correcto)</td></tr></table><p>La lista completa está en <b>Catálogo → Unidades</b>. Si dos unidades no miden lo mismo (por ejemplo kg y m) aparece «Las unidades no son compatibles».</p>',
+  ex:[{m:'calc',e:'1000 bbl to m^3'},{m:'calc',e:'350 MBD to m^3/day'},{m:'calc',e:'100 km/h to m/s'},{m:'calc',e:'60 degF to degC'},{m:'calc',e:'14.7 psi to bar'}]},
+ {id:'matrices', t:'Matrices y vectores', d:'Determinante, inversa, valores propios, sistemas lineales',
+  h:'<p>En escritura natural usa SHIFT + 7 (matriz 2×2) o SHIFT + 8 (3×3), o el Catálogo → Matrices. En lineal, las filas se separan con <code>;</code> y los elementos con <code>,</code>: <code>[1,2;3,4]</code>.</p><ul><li><code>det(A)</code>, <code>inv(A)</code>, <code>transpose(A)</code>, <code>trace(A)</code></li><li><code>eigs(A).values</code>: valores propios</li><li><code>lusolve(A, b)</code>: resuelve A·x = b</li><li><code>dot(u,v)</code>, <code>cross(u,v)</code>, <code>norm(v)</code></li></ul><p>Puedes guardar matrices en variables: <code>A = [1,2;3,4]</code>.</p>',
+  ex:[{m:'calc',e:'det([1,2;3,4])'},{m:'calc',e:'inv([2,1;1,3])'},{m:'calc',e:'lusolve([2,1;1,-1],[5;1])'}]},
+ {id:'estadistica', t:'Estadística y probabilidad', d:'Media, desviación, distribución normal, combinatoria',
+  h:'<p>Las funciones reciben los datos separados por comas o como lista entre corchetes.</p><ul><li><code>mean</code>, <code>median</code>, <code>mode</code>, <code>std</code> (muestral), <code>variance</code>, <code>min</code>, <code>max</code>, <code>sum</code></li><li><code>normcdf(x, μ, σ)</code>: probabilidad acumulada de la normal; <code>normpdf(x, μ, σ)</code>: densidad</li><li><code>nCr(n, r)</code> (SHIFT + ×), <code>nPr(n, r)</code> (SHIFT + −), factorial con SHIFT + )</li></ul>',
+  ex:[{m:'calc',e:'mean(12,15,18,21)'},{m:'calc',e:'std(12,15,18,21)'},{m:'calc',e:'normcdf(1.96,0,1)'},{m:'calc',e:'nCr(10,3)'}]},
+ {id:'complejos', t:'Números complejos', d:'Operar con i, módulo y argumento',
+  h:'<p>La unidad imaginaria es SHIFT + punto (<b>i</b>). Las raíces de negativos dan resultados complejos automáticamente.</p><ul><li><code>re</code>, <code>im</code>, <code>abs</code> (módulo), <code>arg</code> (argumento, según DEG/RAD), <code>conj</code></li></ul>',
+  ex:[{m:'calc',e:'(2+3i)*(1-i)'},{m:'calc',e:'sqrt(-4)'},{m:'calc',e:'abs(3+4i)'}]},
+ {id:'cas', t:'Modo CAS', d:'Derivar, integrar, límites, Taylor, factorizar',
+  h:'<p>En CAS las letras son símbolos: <code>x^2+2x</code> no necesita valor. Los resultados son exactos y el CAS trabaja siempre en <b>radianes</b>. Los atajos sobre el teclado insertan cada comando con sus recuadros.</p><div class="mtable"><table><tr><th>Comando</th><th>Qué hace</th></tr><tr><td><code>diff(f, x)</code></td><td>Derivada; <code>diff(f, x, 2)</code> segunda derivada</td></tr><tr><td><code>integrate(f, x)</code></td><td>Integral indefinida (+C)</td></tr><tr><td><code>defint(f, a, b, x)</code></td><td>Integral definida; admite <code>Infinity</code></td></tr><tr><td><code>nint(f, a, b, x)</code></td><td>Integral definida numérica</td></tr><tr><td><code>limit(f, x, a)</code></td><td>Límite; <code>a</code> puede ser <code>Infinity</code></td></tr><tr><td><code>taylor(f, x, n, a)</code></td><td>Serie de Taylor de orden n alrededor de a</td></tr><tr><td><code>factor</code>, <code>expand</code>, <code>simplify</code></td><td>Factorizar, expandir, simplificar</td></tr><tr><td><code>partfrac(f, x)</code></td><td>Fracciones parciales</td></tr><tr><td><code>sum(f, k, a, b)</code></td><td>Sumatoria</td></tr></table></div><h4>Cómo resuelve</h4><p>Primero intenta con Nerdamer. Si no encuentra la respuesta, o la respuesta no pasa una comprobación (por ejemplo, que la derivada de la primitiva devuelva el integrando), prueba con Algebrite. Si ninguno lo logra y el problema tiene un valor numérico, lo calcula numéricamente y lo indica debajo del resultado.</p>',
+  ex:[{m:'cas',e:'diff(x^3*sin(x),x)'},{m:'cas',e:'integrate(x^2*ln(x),x)'},{m:'cas',e:'integrate(1/(x^3+1),x)'},{m:'cas',e:'defint(e^(-x^2),0,Infinity,x)'},{m:'cas',e:'limit(sin(x)/x,x,0)'},{m:'cas',e:'taylor(cos(x),x,6,0)'},{m:'cas',e:'factor(x^4-1)'}]},
+ {id:'ecuaciones', t:'Ecuaciones y sistemas', d:'Soluciones exactas y numéricas',
+  h:'<p>En CAS escribe la ecuación con <b>=</b> (SHIFT + coma) y pulsa EXE. Para un sistema, separa las ecuaciones con <b>;</b> (SHIFT + 9).</p><ul><li>Si hay solución exacta, aparece con su valor aproximado debajo.</li><li>Si la forma exacta es muy larga (típico en cúbicas), se muestra el valor decimal; <b>S⇔D</b> enseña la exacta.</li><li>Si no hay solución exacta (por ejemplo <code>cos(x) = x</code>), se busca numéricamente entre −100 y 100. En ecuaciones periódicas se muestran las 8 soluciones más cercanas a cero.</li><li>Para buscar en un intervalo concreto: <code>nsolve(ecuación, x, a, b)</code>.</li></ul>',
+  ex:[{m:'cas',e:'x^2-5x+6=0'},{m:'cas',e:'2x+y=5; x-y=1'},{m:'cas',e:'x^3-2x-5=0'},{m:'cas',e:'cos(x)=x'},{m:'cas',e:'nsolve(sin(x)=0.5,x,0,10)'}]},
+ {id:'definir', t:'Variables y funciones en CAS', d:'Definir con := y consultarlas',
+  h:'<p>En CAS se define con <b>:=</b> (SHIFT + 2):</p><ul><li><code>a := 3</code> guarda un valor o expresión.</li><li><code>f(x) := x^2+1</code> define una función que luego usas como <code>f(2)</code> o <code>diff(f(x), x)</code>.</li></ul><p>Todas las variables, de Cálculo y de CAS, se ven y se borran en <b>Catálogo → Variables</b>.</p>',
+  ex:[{m:'cas',e:'f(x):=x^2+1'},{m:'cas',e:'diff(f(x),x)'}]},
+ {id:'grafica', t:'Gráficas', d:'Dibujar, mover, trazar y analizar',
+  h:'<p>Escribe hasta cuatro expresiones en <b>y1…y4</b> usando x. El círculo de color muestra u oculta cada una; tocar la etiqueta <b>y1 =</b> la selecciona para el análisis.</p><ul><li><b>Arrastra</b> para mover, <b>pellizca</b> para acercar o alejar, <b>toca dos veces</b> para volver a la vista estándar.</li><li><b>Trazar</b>: arrastra el dedo sobre la gráfica para leer coordenadas de la función seleccionada.</li><li><b>Raíces</b>, <b>Máx/Mín</b> e <b>Intersección</b> analizan la parte visible de la gráfica.</li><li><b>Ajustar Y</b> escala el eje vertical a lo visible; <b>Estándar</b> vuelve a −10…10.</li><li><b>Teclas</b> muestra el teclado de la calculadora para escribir funciones.</li></ul><p>Las gráficas usan siempre radianes.</p>',
+  ex:[{m:'graph',e:'x^3-3x'},{m:'graph',e:'sin(x)/x'}]},
+ {id:'implicitas', t:'Relaciones y desigualdades', d:'Círculos, elipses y regiones sombreadas',
+  h:'<p>Además de funciones, puedes escribir cualquier relación entre x e y:</p><ul><li><code>x^2+y^2=9</code> dibuja un círculo; <code>x=3</code>, una recta vertical.</li><li><code>y>x^2-2</code> o <code>x^2/9+y^2/4<=1</code> sombrean la región. Con &lt; o &gt; el borde es discontinuo; con ≤ o ≥, continuo.</li></ul><p>Trazar, Raíces, Máx/Mín, Intersección y Tabla funcionan solo con funciones de la forma y = f(x).</p>',
+  ex:[{m:'graph',e:'x^2+y^2=9'},{m:'graph',e:'y>x^2-2'},{m:'graph',e:'x^2/9+y^2/4<=1'}]},
+ {id:'tabla', t:'Tabla de valores', d:'Valores de las funciones paso a paso',
+  h:'<p>En Gráfica pulsa <b>Tabla</b>. Ajusta el valor inicial de x, el paso y el número de filas; la tabla se actualiza al escribir y muestra todas las funciones visibles.</p>', ex:[]},
+ {id:'ajustes', t:'Ajustes', d:'Escritura, tema, ángulos y formato',
+  h:'<ul><li><b>Escritura</b>: natural o lineal.</li><li><b>Tema</b>: automático (según el teléfono), Marfil, Grafito o Pizarra.</li><li><b>Ángulos en Cálculo</b>: grados o radianes (CAS y Gráfica usan siempre radianes).</li><li><b>Formato de números</b> y <b>dígitos significativos</b>.</li><li><b>Resultado por defecto</b>: exacto o decimal.</li><li><b>Borrar historial</b>.</li></ul>', ex:[]},
+ {id:'errores', t:'Mensajes de error', d:'Qué significan y cómo resolverlos',
+  h:'<table><tr><th>Mensaje</th><th>Qué hacer</th></tr><tr><td>Completa los recuadros vacíos</td><td>Hay una plantilla sin llenar; muévete con ◀ ▶ y complétala.</td></tr><tr><td>La variable x no tiene valor</td><td>En Cálculo, x necesita valor (<code>x = 2</code>). Para trabajar con x simbólicamente, usa CAS.</td></tr><tr><td>Falta cerrar un paréntesis</td><td>Revisa que cada ( tenga su ).</td></tr><tr><td>Función no definida</td><td>Escribiste algo como <code>a(2)</code> sin definir a. Si querías multiplicar, usa ×.</td></tr><tr><td>Las unidades no son compatibles</td><td>Estás convirtiendo magnitudes distintas, como volumen a masa.</td></tr><tr><td>No encontré una primitiva</td><td>La integral no tiene forma cerrada conocida; usa la integral definida para obtener un valor.</td></tr><tr><td>No encontré soluciones reales</td><td>Prueba <code>nsolve(ecuación, x, a, b)</code> con otro intervalo, o revisa si solo hay soluciones complejas.</td></tr></table>', ex:[]},
+ {id:'instalar', t:'Instalación y actualizaciones', d:'Uso sin conexión y versiones nuevas',
+  h:'<p>Una vez instalada desde el navegador, la app funciona con o sin internet. Cuando se publica una versión nueva, se descarga sola en segundo plano y se aplica la próxima vez que cierres y abras la app.</p><p>El historial, las variables y los ajustes se guardan solo en tu teléfono.</p>', ex:[]}
+];
+function norm(s){ return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+function keyTable(){
+  var rows = [];
+  KEYS.forEach(function(r){ r.forEach(function(k){ rows.push('<tr><td><b>'+plain(k.m)+'</b></td><td>'+(k.d||'')+'</td><td>'+(k.s ? '<b>'+k.s+'</b>: '+(k.sd||'') : '')+'</td></tr>'); }); });
+  return '<div class="mtable"><table><tr><th>Tecla</th><th>Función</th><th>Con SHIFT</th></tr>'+rows.join('')+'</table></div>';
+}
+function openManual(id){
+  S.seenManual = true; save();
+  var body = document.createElement('div');
+  if(id){ showSection(body, id); }
+  else showIndex(body, '');
+  openSheet('Manual de usuario', body);
+}
+function showIndex(body, q){
+  body.innerHTML = '';
+  var inp = document.createElement('input'); inp.className='msearch'; inp.type='search'; inp.placeholder='Buscar: integral, unidades, matriz…'; inp.value=q||'';
+  inp.setAttribute('aria-label','Buscar en el manual');
+  var list = document.createElement('div'); list.className='mindex';
+  function fill(){
+    list.innerHTML='';
+    var nq = norm(inp.value.trim());
+    var found = MANUAL.filter(function(s){ return !nq || norm(s.t+' '+s.d+' '+s.h.replace(/<[^>]+>/g,' ')).indexOf(nq)>=0; });
+    if(!found.length){ var p=document.createElement('p'); p.className='about'; p.textContent='No hay secciones con «'+inp.value+'». Prueba con otra palabra.'; list.appendChild(p); }
+    found.forEach(function(s){
+      var b = document.createElement('button'); b.innerHTML='<b></b><small></small>'; b.firstChild.textContent=s.t; b.lastChild.textContent=s.d;
+      b.onclick = function(){ showSection(body, s.id, inp.value); };
+      list.appendChild(b);
+    });
+  }
+  inp.addEventListener('input', fill);
+  body.appendChild(inp); body.appendChild(list); fill();
+  $('#sheetBody').scrollTop = 0;
+}
+function showSection(body, id, q){
+  var idx = 0; for(var i=0;i<MANUAL.length;i++) if(MANUAL[i].id===id) idx=i;
+  var s = MANUAL[idx];
+  body.innerHTML='';
+  var bk = document.createElement('button'); bk.className='backbtn'; bk.textContent='Índice'; bk.onclick=function(){ showIndex(body, q||''); };
+  body.appendChild(bk);
+  var doc = document.createElement('div'); doc.className='mdoc';
+  doc.innerHTML = '<h3></h3>' + s.h.replace('{{KEYS}}', keyTable());
+  doc.querySelector('h3').textContent = s.t;
+  body.appendChild(doc);
+  if(s.ex && s.ex.length){
+    var h = document.createElement('h4'); h.textContent='Pruébalo'; h.style.margin='4px 0'; body.appendChild(h);
+    var tr = document.createElement('div'); tr.className='try';
+    s.ex.forEach(function(x){
+      var b = document.createElement('button'); b.innerHTML='Probar<span></span>'; b.lastChild.textContent = x.e;
+      b.onclick = function(){ runExample(x); };
+      tr.appendChild(b);
+    });
+    body.appendChild(tr);
+  }
+  var nav = document.createElement('div'); nav.className='mnav';
+  if(idx>0){ var pv=document.createElement('button'); pv.textContent='← '+MANUAL[idx-1].t; pv.onclick=function(){ showSection(body, MANUAL[idx-1].id, q); }; nav.appendChild(pv); } else nav.appendChild(document.createElement('span'));
+  if(idx<MANUAL.length-1){ var nx=document.createElement('button'); nx.textContent=MANUAL[idx+1].t+' →'; nx.onclick=function(){ showSection(body, MANUAL[idx+1].id, q); }; nav.appendChild(nx); }
+  body.appendChild(nav);
+  $('#sheetBody').scrollTop = 0;
+}
+function runExample(x){
+  closeSheet();
+  if(S.mode!==x.m) setMode(x.m);
+  if(x.m==='graph'){
+    var slot = -1; for(var i=0;i<S.funcs.length;i++){ if(!S.funcs[i].e.trim()){ slot=i; break; } }
+    if(slot<0) slot = S.gsel;
+    S.funcs[slot].e = x.e; S.funcs[slot].on = true; S.gsel = slot; marks=[];
+    renderFuncs(); save(); drawGraph(); return;
+  }
+  var tex = mathjsTeX(x.e, x.m==='cas');
+  exe(false, { latex: tex, lin: prep(x.e) });
+}
+
+/* ================= Arranque ================= */
+function boot(){
+  setupMathfield();
+  replayCas(); applyTheme(); applyInputMode(); renderFuncs(); setMode(S.mode);
+  $('#loading').remove();
+  if(!isTouch){ if(S.input==='natural') mfFocus(); else expr.focus(); }
+}
+window.addEventListener('load', function(){
+  if(window.customElements && customElements.whenDefined) customElements.whenDefined('math-field').then(boot); else boot();
+});
+if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')){ navigator.serviceWorker.register('sw.js'); }
+
+/* Para pruebas automáticas */
+window.__calcu = { latexToExpr: latexToExpr, evalCAS: evalCAS, S: S };
 })();
 </script>
 </body>
