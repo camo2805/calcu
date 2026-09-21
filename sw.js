@@ -1,6 +1,6 @@
 // Service worker: guarda la app completa para que funcione sin conexión.
 // Cambia VERSION en cada publicación para que los teléfonos descarguen la nueva.
-const VERSION = 'calcu-v0.2.0';
+const VERSION = 'calcu-v0.2.1';
 const ASSETS = [
   './', 'index.html', 'manifest.webmanifest',
   'lib/math.js', 'lib/nerdamer.all.min.js', 'lib/algebrite.bundle-for-browser.js',

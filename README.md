@@ -6,6 +6,8 @@ Funciona con y sin conexión a internet una vez instalada.
 
 ## Novedades de la versión 0.2
 
+**0.2.1**: corregido el catálogo, cuya barra de categorías cambiaba de posición al tocarla y hacía seleccionar otra categoría. Ahora la ventana tiene altura fija, las categorías van en dos filas y recuerda la última usada.
+
 - **Escritura natural**: fracciones, raíces, potencias, integrales, límites, sumatorias y matrices se escriben y se ven como en un libro (MathLive). La escritura lineal sigue disponible en Ajustes.
 - **Manual de usuario incorporado** (botón `?`): 18 secciones con buscador, ejemplos que se ejecutan con un toque y tabla de todas las teclas.
 - **Ayuda en cada tecla**: mantener pulsada una tecla muestra qué hace, también con SHIFT.
